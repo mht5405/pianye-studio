@@ -105,7 +105,7 @@ export function CanvasSettings({ config, articleName, onConfigChange, onEditArti
     <h4>画布留白</h4>
     <div class="setting-control-grid">
       <label class="range-label">左右安全边距 <output>{config.cardHorizontalPadding}px</output><input type="range" min="60" max="92" step="2" value={config.cardHorizontalPadding} onInput={(event) => onConfigChange("cardHorizontalPadding", Number(event.currentTarget.value))} /></label>
-      <label class="range-label">上下安全留白 <output>{config.cardVerticalPadding}px</output><input type="range" min="50" max="88" step="2" value={config.cardVerticalPadding} onInput={(event) => onConfigChange("cardVerticalPadding", Number(event.currentTarget.value))} /></label>
+      <label class="range-label">上下安全留白 <output>{config.cardVerticalPadding}px</output><input type="range" min="50" max="88" step="1" value={config.cardVerticalPadding} onInput={(event) => onConfigChange("cardVerticalPadding", Number(event.currentTarget.value))} /></label>
     </div>
     <h4>页码</h4>
     <label class="check-label"><input type="checkbox" checked={config.showPageNumber} onChange={(event) => onConfigChange("showPageNumber", event.currentTarget.checked)} /> 显示右下角页码</label>
