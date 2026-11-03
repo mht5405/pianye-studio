@@ -11,7 +11,13 @@ import './styles/cards/theme-picker.css';
 import './styles/workbench.css';
 import './styles/studio.css';
 import './styles/proofroom.css';
-import './styles/reading-room.css';
+import readingRoomStyles from './styles/reading-room.css?inline';
 import { App } from './app/App';
+
+// Vite may load shared CSS before app.css in production. Apply the final
+// workspace overrides after all extracted styles, matching development order.
+const readingRoomStyle = document.createElement('style');
+readingRoomStyle.textContent = readingRoomStyles;
+document.head.appendChild(readingRoomStyle);
 
 render(<App />, document.getElementById('app')!);
