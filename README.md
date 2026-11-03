@@ -2,7 +2,7 @@
 
 > 把写好的 Markdown，编排成适合小红书与微信分享的连续图卡。
 
-[在线工作台](https://mht5405.github.io/pianye-studio/) · [GitHub 项目仓库](https://github.com/mht5405/pianye-studio) · [来源与许可说明](./UPSTREAM.md)
+[项目主页](https://mht5405.github.io/pianye-studio/) · [在线工作台](https://mht5405.github.io/pianye-studio/app/) · [GitHub 项目仓库](https://github.com/mht5405/pianye-studio) · [来源与许可说明](./UPSTREAM.md)
 
 ![篇页新版主页](./docs/homepage-preview.png)
 
