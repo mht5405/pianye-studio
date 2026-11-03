@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
-  <title id="title">Md2Card：把 Markdown 笔记变成小红书图片</title>
-  <desc id="description">Md2Card 的产品分享封面，展示 Markdown 笔记被整理为连续图片卡片。</desc>
+  <title id="title">篇页：把 Markdown 编排成好读的图文</title>
+  <desc id="description">篇页 Markdown 图文工作室，在本地将文章整理成连续卡片。</desc>
   <defs>
     <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="18" stdDeviation="17" flood-color="#27233c" flood-opacity=".18"/></filter>
     <filter id="soft-shadow" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#27233c" flood-opacity=".16"/></filter>
@@ -17,7 +17,7 @@
   <g font-family="Droid Sans Fallback, Noto Sans CJK SC, sans-serif">
     <text x="60" y="118" fill="#b65043" font-size="13" font-weight="700" letter-spacing="2.1">A CALM WORKSPACE FOR MARKDOWN NOTES</text>
     <text x="60" y="202" fill="#242329" font-size="56" font-weight="700" letter-spacing="-2">把 Markdown 笔记</text>
-    <text x="60" y="270" fill="#bd5144" font-size="56" font-weight="700" letter-spacing="-2">变成小红书图片</text>
+    <text x="60" y="270" fill="#bd5144" font-size="56" font-weight="700" letter-spacing="-2">编排成分享图文</text>
     <text x="60" y="324" fill="#55535b" font-size="19">导入一篇笔记，微调排版后，下载一组可直接发布的图片。</text>
     <text x="60" y="354" fill="#55535b" font-size="19">公式、表格、代码与本地图片，也能各自保持清晰。</text>
 
@@ -38,7 +38,7 @@
     <rect width="546" height="447" rx="24" fill="url(#panel)"/>
     <path d="M24 46H522" stroke="#4a465f" stroke-width="1"/>
     <circle cx="28" cy="22" r="4" fill="#f18b78"/><circle cx="42" cy="22" r="4" fill="#eec877"/><circle cx="56" cy="22" r="4" fill="#7fc49a"/>
-    <text x="350" y="27" fill="#bbb4db" font-family="monospace" font-size="12">Md2Card / local workspace</text>
+    <text x="350" y="27" fill="#bbb4db" font-family="monospace" font-size="12">PIANYE / LOCAL STUDIO</text>
 
     <g transform="translate(68 86) rotate(-4 126 155)">
       <rect width="252" height="310" rx="16" fill="url(#blue-card)"/>

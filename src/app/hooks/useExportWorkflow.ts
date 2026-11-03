@@ -16,7 +16,7 @@ function safeFilename(title: string): string {
     title
       .replace(/[\\/:*?"<>|]/g, "-")
       .trim()
-      .slice(0, 64) || "md2card-cards"
+      .slice(0, 64) || "social-cards"
   );
 }
 

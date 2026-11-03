@@ -2,7 +2,7 @@ import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
-import type { ArticleDocument, Block, Diagnostic, Inline } from '../domain/document';
+import type { ArticleDocument, ArticleMetadata, Block, Diagnostic, Inline } from '../domain/document';
 
 type MdNode = {
   type: string;
@@ -64,6 +64,49 @@ function nodeId(index: number, suffix = ''): string {
 }
 
 const CAPTION_PARAGRAPH = /^(?:图|表)\s*[0-9０-９一二三四五六七八九十]+\s*(?:[.:：、·-]\s*|\s+).+$/;
+
+function unquote(value: string): string {
+  const trimmed = value.trim();
+  if (trimmed.length >= 2 && ((trimmed.startsWith('"') && trimmed.endsWith('"')) || (trimmed.startsWith("'") && trimmed.endsWith("'")))) {
+    return trimmed.slice(1, -1).trim();
+  }
+  return trimmed;
+}
+
+function safeWebUrl(value?: string): string | undefined {
+  if (!value) return undefined;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' || url.protocol === 'http:' ? url.href : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function splitFrontMatter(markdown: string): { body: string; title: string; metadata: ArticleMetadata } {
+  const metadata: ArticleMetadata = { references: [] };
+  const match = markdown.match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*(?:\r?\n|$)/);
+  if (!match) return { body: markdown, title: '', metadata };
+  let listKey = '';
+  for (const line of match[1].split(/\r?\n/)) {
+    const item = line.match(/^\s+-\s+(.+)$/);
+    if (item && listKey === 'references') {
+      metadata.references.push(unquote(item[1]));
+      continue;
+    }
+    const field = line.match(/^([\w-]+)\s*:\s*(.*)$/);
+    if (!field) continue;
+    const [, key, rawValue] = field;
+    const value = unquote(rawValue);
+    listKey = key === 'references' && !value ? key : '';
+    if (key === 'title') metadata.title = value;
+    if (key === 'cover_source') metadata.coverSource = value;
+    if (key === 'cover_source_url') metadata.coverSourceUrl = value;
+    if (key === 'cover_license') metadata.coverLicense = value;
+    if (key === 'references' && value) metadata.references.push(value);
+  }
+  return { body: markdown.slice(match[0].length), title: metadata.title ?? '', metadata };
+}
 
 function toInline(nodes: MdNode[] | undefined): Inline[] {
   if (!nodes) return [];
@@ -194,22 +237,44 @@ function attachAdjacentCaptions(blocks: Block[]): Block[] {
   return result;
 }
 
-export function parseMarkdown(markdown: string): ArticleDocument {
+export function parseMarkdown(markdown: string, metadataOverrides: Pick<ArticleMetadata, 'coverSource' | 'coverSourceUrl'> = {}): ArticleDocument {
   const diagnostics: Diagnostic[] = [];
   try {
-    const tree = processor.parse(normalizeMathDelimiters(markdown)) as unknown as MdNode;
+    const frontMatter = splitFrontMatter(markdown);
+    const metadata: ArticleMetadata = {
+      ...frontMatter.metadata,
+      coverSource: metadataOverrides.coverSource?.trim() || frontMatter.metadata.coverSource,
+      coverSourceUrl: metadataOverrides.coverSourceUrl?.trim() || frontMatter.metadata.coverSourceUrl,
+    };
+    const tree = processor.parse(normalizeMathDelimiters(frontMatter.body)) as unknown as MdNode;
     const parsed = (tree.children ?? [])
       .map((node, index) => toBlock(node, index, diagnostics))
       .filter((node): node is Block => node !== null);
 
-    let title = '';
+    let title = frontMatter.title;
     const first = parsed[0];
     const blocks = attachAdjacentCaptions(parsed);
     if (first?.kind === 'heading' && first.depth === 1) {
-      title = inlineText(first.children);
+      title ||= inlineText(first.children);
       blocks.shift();
     }
-    return { title, blocks, diagnostics };
+    const sourceEntries: Array<{ label: string; text: string; url?: string; detail?: string }> = [
+      ...(metadata.coverSource ? [{ label: '封面图片来源', text: metadata.coverSource, url: metadata.coverSourceUrl, detail: metadata.coverLicense }] : []),
+      ...metadata.references.map((text, index) => ({ label: `资料来源 ${index + 1}`, text })),
+    ];
+    if (sourceEntries.length) {
+      sourceEntries.forEach((entry, index) => {
+        const children: Inline[] = [
+          { kind: 'strong', children: [{ kind: 'text', value: `${entry.label}：` }] },
+          { kind: 'text', value: entry.text },
+        ];
+        if (entry.detail) children.push({ kind: 'text', value: `（${entry.detail}）` });
+        const sourceUrl = safeWebUrl(entry.url);
+        if (sourceUrl) children.push({ kind: 'text', value: ' ' }, { kind: 'link', url: sourceUrl, children: [{ kind: 'text', value: '查看来源' }] });
+        blocks.push({ id: `generated-source-${index + 1}`, kind: 'paragraph', children });
+      });
+    }
+    return { title, blocks, diagnostics, metadata };
   } catch (error) {
     return {
       title: '',

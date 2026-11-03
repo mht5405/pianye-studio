@@ -20,12 +20,18 @@ export function useCardLayout({
   sourceFileName: string;
 }) {
   const [measurements, setMeasurements] = useState<Record<string, number>>({});
-  const article = useMemo(() => parseMarkdown(markdown), [markdown]);
+  const article = useMemo(() => {
+    const parsed = parseMarkdown(markdown, { coverSource: config.coverSource, coverSourceUrl: config.coverSourceUrl });
+    if (config.coverMode !== "none" && config.coverImageDataUrl && !parsed.metadata?.coverSource) {
+      parsed.diagnostics.push({ level: 'error', message: '已设置封面图片，但缺少 cover_source；请补充图片来源后才能导出。' });
+    }
+    return parsed;
+  }, [config.coverImageDataUrl, config.coverMode, config.coverSource, config.coverSourceUrl, markdown]);
   const inferredTitle =
     article.title.trim() || filenameStem(sourceFileName) || "未命名笔记";
   const articleName = titleOverride.trim() || inferredTitle;
   const titleSource = article.title.trim()
-    ? "Markdown 首个 H1"
+    ? article.metadata?.title ? "Markdown front matter" : "Markdown 首个 H1"
     : sourceFileName
       ? "导入文件名"
       : "默认名称";
@@ -39,8 +45,13 @@ export function useCardLayout({
             title: articleName,
             kicker: config.coverKicker.trim(),
             subtitle: config.coverSubtitle.trim(),
+            imageDataUrl: config.coverImageDataUrl,
+            imagePositionY: config.coverImagePositionY,
+            authorName: config.authorName,
+            authorAvatarDataUrl: config.authorAvatarDataUrl,
+            showAuthor: config.showAuthorOnCover,
           },
-    [articleName, config.coverKicker, config.coverMode, config.coverSubtitle],
+    [articleName, config.authorAvatarDataUrl, config.authorName, config.coverImageDataUrl, config.coverImagePositionY, config.coverKicker, config.coverMode, config.coverSubtitle, config.showAuthorOnCover],
   );
   const pagePlan = useMemo(
     () => createPagePlan(article, config, measurements, cover),

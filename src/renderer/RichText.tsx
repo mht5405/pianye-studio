@@ -147,7 +147,7 @@ export function BlockView({ block, config, resources = EMPTY_IMAGE_RESOURCES, ne
         return <Tag class={`heading depth-${block.depth}`}><InlineContent nodes={block.children} /></Tag>;
       }
       case 'paragraph':
-        return <p><InlineContent nodes={block.children} /></p>;
+        return <p class={block.id.startsWith('generated-source-') ? 'generated-source-entry' : undefined}><InlineContent nodes={block.children} /></p>;
       case 'list':
         return <ListBlock block={block} config={config} resources={resources} />;
       case 'blockquote':

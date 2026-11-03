@@ -7,15 +7,15 @@ const TICK = '`';
  * integration example, while this article demonstrates the rest of the card
  * system in a few immediately readable pages.
  */
-export const STARTER_MARKDOWN = String.raw`# Md2Card：把 Markdown 笔记变成小红书图片
+export const STARTER_MARKDOWN = String.raw`# 篇页：把 Markdown 编排成分享图文
 
 > **纯前端、本地处理、预览即导出。** 这是一篇首次打开工作台就能完整阅读的产品演示：不需要上传文件，也不需要先授予图片目录权限。
 
-Md2Card 适合日常 Markdown 笔记：学习总结、读书摘录、课程笔记、技术文章或知识整理都可以直接导入。它不把文章机械截断，而是根据真实卡片尺寸重新组织阅读节奏；右侧预览看到的内容，就是之后导出的 PNG。
+篇页适合文章、读书摘录、课程笔记、技术文章或知识整理。它不把文章机械截断，而是根据真实卡片尺寸重新组织阅读节奏；右侧预览看到的内容，就是之后导出的 PNG。
 
 ## 01 · 从一篇 Markdown 开始
 
-你可以直接替换左侧内容、粘贴自己的笔记，或导入单篇 ${TICK}.md${TICK} 文件。默认的 **3:4 标准卡片 + 平衡密度 + 融合首卡** 已适合多数笔记；遇到特殊内容时，再进入排版设置细调。
+你可以直接替换左侧内容、粘贴自己的笔记，或导入单篇 ${TICK}.md${TICK} 文件。默认的 **3:5 长图文 + 暗色长文主题 + 独立封面** 对应本项目的图文样式；在“画布”设置中可以替换封面图片。
 
 1. 输入或导入 Markdown；
 2. 先检查右侧自动分页；
@@ -34,7 +34,7 @@ Md2Card 适合日常 Markdown 笔记：学习总结、读书摘录、课程笔�
 
 有些 Markdown 笔记会同时出现中文说明、English terms、${TICK}inline_code()${TICK} 与行内公式。例如信噪比可以写作 $\mathrm{SNR}=10\log_{10}(P_s/P_n)$，而不应迫使整段文字为一条公式让步。
 
-对于独立公式，Md2Card 使用 KaTeX 渲染，并允许单独缩放：
+对于独立公式，篇页使用 KaTeX 渲染，并允许单独缩放：
 
 $$
 \begin{aligned}
@@ -51,7 +51,7 @@ $$
 
 ## 03 · 表格需要自己的收纳方式
 
-宽表格在卡片里最容易破坏阅读宽度。Md2Card 让表格使用独立字号；表格过高时按行续页并重复表头，而不是裁掉底部信息。
+宽表格在卡片里最容易破坏阅读宽度。篇页让表格使用独立字号；表格过高时按行续页并重复表头，而不是裁掉底部信息。
 
 | 阶段 | 输入 | 输出 | 关键检查 | 常见问题 |
 | --- | --- | --- | --- | --- |
@@ -76,17 +76,17 @@ type ExportPreset = 'standard' | 'high-res';
 
 export function chooseExportSize(
   preset: ExportPreset,
-  ratio: '3:4' | '2:3',
+  ratio: '3:4' | '2:3' | '3:5',
 ) {
   const width = preset === 'high-res' ? 2160 : 1080;
-  const height = ratio === '2:3' ? width * 1.5 : width * (4 / 3);
+  const height = ratio === '3:4' ? width * (4 / 3) : ratio === '2:3' ? width * 1.5 : width * (5 / 3);
   return { width, height };
 }
 ${FENCE}
 
-- **标准发布**：3:4 为 1080 × 1440，适合直接发布；
+- **标准发布**：3:5 为 1080 × 1800，适合当前长图文模板；
 - **高清原图**：像素翻倍，适合留存或细看公式、表格；
-- **深紫工作台**：只改变编辑界面，不改变最终卡片的主题。
+- **深色外观**：只改变编辑界面，不改变最终卡片的主题。
 
 <!-- md2card:break -->
 

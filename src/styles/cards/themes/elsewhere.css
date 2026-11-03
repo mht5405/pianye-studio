@@ -1,0 +1,83 @@
+/* Dark, editorial long-form cards inspired by the supplied visual reference. */
+.theme-elsewhere {
+  --theme-surface: #121212;
+  --theme-surface-container-low: #191919;
+  --theme-surface-container: #222222;
+  --theme-surface-container-high: #2c2c2c;
+  --theme-on-surface: #eeeeec;
+  --theme-on-surface-variant: #c6c6c2;
+  --theme-primary: #f0aa33;
+  --theme-primary-container: #61471d;
+  --theme-on-primary-container: #fff1d5;
+  --theme-outline: #757575;
+  --theme-outline-variant: #414141;
+  --theme-code-surface: #1a1a1a;
+  --theme-code-toolbar: #252525;
+  --theme-table-surface: #191919;
+  --theme-table-header: #242424;
+  --theme-table-row-odd: #171717;
+  --theme-table-row-even: #202020;
+  --theme-table-shadow: none;
+  --theme-math-surface: transparent;
+  --theme-syntax-comment: #a4a4a0;
+  --theme-syntax-keyword: #f0aa33;
+  --theme-syntax-string: #b7d39c;
+  --theme-syntax-function: #a8c8dc;
+  --theme-syntax-number: #e5bd83;
+  --shape-technical: 4px;
+  --shape-container: 0;
+  --shape-cover: 0;
+  --heading-marker-width: 0;
+  --heading-marker-height: 0;
+  color: #eeeeec;
+}
+
+.card-page.theme-elsewhere,
+.measure-stage.theme-elsewhere {
+  background-color: #121212;
+  background-image: repeating-linear-gradient(0deg, rgba(255,255,255,.018) 0 1px, transparent 1px 3px), radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.025), transparent 60%);
+}
+
+.theme-elsewhere .card-content,
+.measure-stage.theme-elsewhere .card-content {
+  font-family: "Noto Sans SC Variable", "Noto Sans SC", Arial, sans-serif;
+}
+
+.theme-elsewhere .card-cover {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 300px;
+  padding: 36px 40px;
+  overflow: hidden;
+  border: 0;
+  color: #f6f6f3;
+  background: #191919;
+}
+
+.theme-elsewhere .card-cover.has-cover-image {
+  background-position: center;
+  background-size: cover;
+}
+
+.theme-elsewhere .card-cover-decoration { display: none; }
+.theme-elsewhere .card-cover-kicker { color: #f0aa33; }
+.theme-elsewhere .card-cover-title { max-width: 92%; color: #fff; font-size: 76px; font-weight: 660; line-height: 1.08; letter-spacing: -.045em; }
+.theme-elsewhere .card-cover-subtitle { color: #eeeeec; }
+.theme-elsewhere .heading.depth-2 { padding-bottom: 0; color: #f0aa33; font-weight: 800; }
+.theme-elsewhere .heading.depth-2::after { display: none; }
+.theme-elsewhere .heading.depth-3 { color: #f0aa33; font-weight: 800; }
+.theme-elsewhere .heading.depth-3::before { background: #f0aa33; }
+.theme-elsewhere .image-card figcaption { text-align: center; }
+.theme-elsewhere .content-block a { color: #f0aa33; text-decoration-color: #f0aa33; }
+.theme-elsewhere .content-block strong { color: #fff; }
+.theme-elsewhere .generated-source-entry { color: #aaa9a5; font-size: 22px; font-weight: 400; line-height: 1.4; }
+.theme-elsewhere .generated-source-entry strong { color: #c4c3bf; font-weight: 500; }
+.theme-elsewhere blockquote { color: #d3d3cf; background: #1c1c1c; border-color: #f0aa33; }
+.theme-elsewhere .continuation-label { color: #191919; background: #f0aa33; }
+.theme-elsewhere .card-footer { border-color: #414141; }
+.theme-elsewhere .card-content.cover-only .card-cover { padding: 72px 58px; }
+.theme-elsewhere .card-content.cover-only .card-cover-title { font-size: 98px; }
+
+.card-theme-option.theme-elsewhere .card-theme-swatch { background-color: #141414; }

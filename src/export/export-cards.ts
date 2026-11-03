@@ -40,13 +40,16 @@ export async function exportCards({
   const files: Record<string, Uint8Array> = {};
   for (let index = 0; index < cards.length; index += 1) {
     const card = cards[index];
+    const cardBackground = window.getComputedStyle(card).backgroundColor;
     const blob = await toBlob(card, {
       // A cache-busting query string makes browser-created blob: image URLs
       // invalid. Local imported images are already immutable object URLs.
       cacheBust: false,
       fontEmbedCSS,
       pixelRatio,
-      backgroundColor: '#fbfaf7',
+      // Each theme owns its canvas color; forcing the editor's light canvas
+      // here makes light text from dark themes nearly invisible in the PNG.
+      backgroundColor: cardBackground,
       width: card.offsetWidth,
       height: card.offsetHeight,
     });
@@ -59,7 +62,7 @@ export async function exportCards({
     await new Promise<void>((resolve) => window.setTimeout(resolve, 0));
   }
 
-  files['README.txt'] = strToU8('由 Md2Card 在本地浏览器生成。每个 .png 已通过 PNG 文件头校验。\n');
+  files['README.txt'] = strToU8('由篇页 Markdown 图文工作室在本地浏览器生成。每个 .png 已通过 PNG 文件头校验。\n');
   const archive = zipSync(files, { level: 6 });
-  download(new Blob([archive], { type: 'application/zip' }), `${filename || 'md2card-cards'}.zip`);
+  download(new Blob([archive], { type: 'application/zip' }), `${filename || 'social-cards'}.zip`);
 }

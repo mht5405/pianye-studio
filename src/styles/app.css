@@ -27,6 +27,8 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 .workspace-site-nav a { padding: 5px 0; color: #6f655d; font-size: 12px; font-weight: 700; text-decoration: none; }
 .workspace-site-nav a:hover { color: #a44235; text-decoration: underline; text-underline-offset: 3px; }
 .topbar-actions { display: flex; align-items: center; gap: 10px; }
+.upstream-info-link { display: inline-flex; align-items: center; flex: none; padding: 5px 0; color: #6f655d; font-size: 12px; font-weight: 700; line-height: 1.4; text-decoration: none; white-space: nowrap; }
+.upstream-info-link:hover { color: #a44235; text-decoration: underline; text-underline-offset: 3px; }
 .github-link { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid #ded8d0; border-radius: 9px; color: #5e5851; background: #fffefa; }
 .github-link svg { width: 18px; height: 18px; }
 .github-link:hover { border-color: #d37a6e; color: #a44235; background: #fff3ef; }
@@ -241,6 +243,11 @@ hr { width: 36%; height: 2px; margin: 8px auto; border: 0; background: #d6c9ba; 
 .text-field { display: grid; gap: 5px; color: #625c55; font-size: 11px; font-weight: 700; }
 .text-field input { width: 100%; height: 33px; padding: 6px 9px; border: 1px solid #e0dad2; border-radius: 7px; outline-color: #df7867; color: #3f3a35; background: #fffefa; font-size: 12px; font-weight: 500; }
 .text-field input::placeholder { color: #aaa298; }
+.cover-image-picker { margin-top: 12px; }
+.cover-image-picker input[type="file"] { height: auto; padding: 6px; background: #fffefa; }
+.cover-image-picker small { color: #81796f; font-size: 10px; font-weight: 500; }
+.clear-cover-image { margin-top: 8px; padding: 5px 8px; border: 1px solid #ded8d0; border-radius: 7px; color: #625c55; background: #fffefa; font-size: 11px; }
+.field-error { margin: 7px 0 0; color: #a44235; font-size: 11px; }
 
 /* First-card cover. The same component is rendered in MeasureStage, so its height participates in PagePlan. */
 .card-page, .measure-stage { --cover-panel: #f6eee7; --cover-border: #e5cec0; --cover-title: #2f2924; --cover-kicker: #9a5144; --cover-subtitle: #665c53; --cover-accent: #d75a49; }
@@ -291,7 +298,7 @@ hr { width: 36%; height: 2px; margin: 8px auto; border: 0; background: #d6c9ba; 
   .topbar { height: 56px; padding: 0 14px; }
   .topbar-branding { gap: 8px; }.brand { gap: 7px; font-size: 16px; }.brand small { display: none; }
   .workspace-site-nav { gap: 0; padding-left: 0; border-left: 0; }.workspace-home-link { display: none; }
-  .topbar-actions { gap: 6px; }.theme-segmented { padding: 2px; }.theme-segmented button { min-height: 28px; padding: 0 6px; font-size: 10px; }.theme-full { display: none; }.theme-short { display: inline; }.github-link { display: none; }.top-export-button { min-width: 0; min-height: 32px; padding: 0 9px; font-size: 11px; }
+  .topbar-actions { gap: 6px; }.theme-segmented { padding: 2px; }.theme-segmented button { min-height: 28px; padding: 0 6px; font-size: 10px; }.theme-full { display: none; }.theme-short { display: inline; }.upstream-info-link { display: none; }.github-link { display: none; }.top-export-button { min-width: 0; min-height: 32px; padding: 0 9px; font-size: 11px; }
   .mobile-workspace-tabs { padding-left: 14px; padding-right: 14px; }
   .editor-panel.workbench-pane.is-active, .settings-panel.workbench-pane.is-active { padding: 17px 16px 18px; }
   .preview-panel { padding: 17px 14px; }

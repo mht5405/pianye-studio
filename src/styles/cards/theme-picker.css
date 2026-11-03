@@ -18,3 +18,8 @@
   background-image: linear-gradient(rgba(23, 102, 124, .2) 1px, transparent 1px), linear-gradient(90deg, rgba(23, 102, 124, .2) 1px, transparent 1px);
   background-size: 7px 7px;
 }
+
+.card-theme-option.theme-elsewhere .card-theme-swatch {
+  background-color: #141414;
+  background-image: radial-gradient(circle at 75% 18%, rgba(237, 170, 51, .34), transparent 35%), repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 3px);
+}

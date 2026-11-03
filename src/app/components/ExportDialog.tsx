@@ -2,7 +2,7 @@ import type { LayoutConfig } from "../../domain/document";
 
 type ExportState = { status: "idle" | "running" | "done" | "error"; message: string };
 type ExportPreflight = { status: "idle" | "checking" | "ready" | "error"; message: string };
-const dimensions = (ratio: LayoutConfig["ratio"], scale: 1 | 2) => `${1080 * scale} × ${(ratio === "3:4" ? 1440 : 1620) * scale}`;
+const dimensions = (ratio: LayoutConfig["ratio"], scale: 1 | 2) => `${1080 * scale} × ${(ratio === "3:4" ? 1440 : ratio === "2:3" ? 1620 : 1800) * scale}`;
 
 export function ExportDialog({ pageCount, config, exportState, preflight, onClose, onConfigChange, onRecheck, onExport }: { pageCount: number; config: LayoutConfig; exportState: ExportState; preflight: ExportPreflight; onClose: () => void; onConfigChange: <Key extends keyof LayoutConfig>(key: Key, value: LayoutConfig[Key]) => void; onRecheck: () => void; onExport: () => void }) {
   const running = exportState.status === "running";

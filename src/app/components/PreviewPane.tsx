@@ -1,6 +1,7 @@
 import type { LayoutConfig, PagePlan } from "../../domain/document";
 import type { ImageResourceIndex } from "../../resources/image-resources";
 import { CardPage } from "../../renderer/CardPage";
+import { useState } from "preact/hooks";
 
 type PreviewColumns = 1 | 2 | 3;
 
@@ -35,6 +36,24 @@ export function PreviewPane({
   onOpenSettings: () => void;
   onCardRef: (pageId: string, node: HTMLElement | null) => void;
 }) {
+  const [activePage, setActivePage] = useState(0);
+  const jumpToPage = (index: number) => {
+    setActivePage(index);
+    document.querySelector<HTMLElement>(`[data-preview-index="${index}"]`)?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+  };
+  const trackActivePage = (event: Event) => {
+    const viewport = event.currentTarget as HTMLElement;
+    const viewportTop = viewport.getBoundingClientRect().top;
+    const frames = Array.from(viewport.querySelectorAll<HTMLElement>(".preview-frame"));
+    let nearest = 0;
+    let distance = Number.POSITIVE_INFINITY;
+    frames.forEach((frame, index) => {
+      const top = frame.getBoundingClientRect().top;
+      const nextDistance = Math.abs(top - viewportTop);
+      if (nextDistance < distance) { distance = nextDistance; nearest = index; }
+    });
+    setActivePage(nearest);
+  };
   return (
     <section class={`preview-panel${activeOnMobile ? " mobile-active" : ""}`}>
       <div class="panel-heading preview-heading">
@@ -80,9 +99,9 @@ export function PreviewPane({
           )}
         </div>
       </div>
-      <div class="preview-scroll" style={previewStyle}>
-        {pagePlan.pages.map((page) => (
-          <div key={page.id} class="preview-frame">
+      <div class="preview-scroll" style={previewStyle} onScroll={trackActivePage}>
+        {pagePlan.pages.map((page, index) => (
+          <div key={page.id} class="preview-frame" data-preview-index={index}>
             <div class="preview-scale">
               <CardPage
                 ref={(node: HTMLElement | null) => onCardRef(page.id, node)}
@@ -95,6 +114,18 @@ export function PreviewPane({
           </div>
         ))}
       </div>
+      <nav class="preview-filmstrip" aria-label="图卡分页导航">
+        <span class="filmstrip-heading">校样页</span>
+        <div class="filmstrip-pages">
+          {pagePlan.pages.map((page, index) => (
+            <button type="button" key={page.id} class={`filmstrip-page${activePage === index ? " selected" : ""}`} aria-current={activePage === index ? "page" : undefined} aria-label={`跳到第 ${index + 1} 张，${page.cover ? "封面" : page.section || "正文"}`} onClick={() => jumpToPage(index)}>
+              <span class="filmstrip-page-index">{String(index + 1).padStart(2, "0")}</span>
+              <span class="filmstrip-page-title">{page.cover ? "封面" : page.section || "正文"}</span>
+            </button>
+          ))}
+        </div>
+        <span class="filmstrip-total">{String(pagePlan.pages.length).padStart(2, "0")} 页</span>
+      </nav>
     </section>
   );
 }

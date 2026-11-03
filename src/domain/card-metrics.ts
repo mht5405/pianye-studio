@@ -1,6 +1,7 @@
 import type { LayoutConfig } from './document';
 
-export const canvasHeight = (ratio: LayoutConfig['ratio']) => (ratio === '3:4' ? 1440 : 1620);
+export const canvasHeight = (ratio: LayoutConfig['ratio']) =>
+  ratio === '3:4' ? 1440 : ratio === '2:3' ? 1620 : 1800;
 
 export function cardBottomPadding(config: LayoutConfig): number {
   // Reserve a little less at the bottom because the optional page number lives

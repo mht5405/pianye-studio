@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark" />
+    <link rel="stylesheet" href="./src/styles/site.css" />
+    <link rel="stylesheet" href="./src/styles/studio.css" />
+    <link rel="stylesheet" href="./src/styles/proofroom.css" />
+    <link rel="stylesheet" href="./src/styles/reading-room.css" />
     <script>
       try {
         const theme = localStorage.getItem("md2card-ui-theme");
@@ -12,40 +16,38 @@
     </script>
     <meta
       name="description"
-      content="Md2Card 是纯前端 Markdown 转小红书图片工具：将日常笔记在浏览器本地排版、预览并导出 PNG ZIP。"
+      content="篇页是一款 Markdown 图文工作室：支持可替换封面、来源署名与 PNG ZIP 导出，内容在本地浏览器处理。"
     />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://haodongcui.github.io/md2card/" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="zh_CN" />
-    <meta property="og:site_name" content="Md2Card" />
-    <meta property="og:title" content="Md2Card · Markdown 转小红书图片" />
+    <meta property="og:site_name" content="篇页" />
+    <meta property="og:title" content="篇页 · Markdown 图文工作室" />
     <meta
       property="og:description"
-      content="将日常 Markdown 笔记整理为可直接发布的小红书图片；全程在浏览器本地完成。"
+      content="把 Markdown 编排成好读、可分享的图文卡片；本地预览并导出 PNG ZIP。"
     />
-    <meta property="og:url" content="https://haodongcui.github.io/md2card/" />
-    <meta property="og:image" content="https://haodongcui.github.io/md2card/og-cover.png?v=2" />
+    <meta property="og:image" content="./og-cover.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Md2Card 将 Markdown 笔记转为小红书图片卡片" />
+    <meta property="og:image:alt" content="Markdown 转小红书与微信图文卡片" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Md2Card · Markdown 转小红书图片" />
+    <meta name="twitter:title" content="篇页 · Markdown 图文工作室" />
     <meta
       name="twitter:description"
       content="在浏览器本地将 Markdown 笔记排版为小红书图片并导出 PNG ZIP。"
     />
-    <meta name="twitter:image" content="https://haodongcui.github.io/md2card/og-cover.png?v=2" />
+    <meta name="twitter:image" content="./og-cover.png" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <title>Md2Card · Markdown 转小红书图片</title>
+    <title>篇页 · Markdown 图文工作室</title>
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳到主要内容</a>
     <header class="site-header">
       <div class="site-header-main">
-        <a class="site-brand" href="./" aria-label="Md2Card 首页">
-          <span class="site-brand-mark" aria-hidden="true">M</span>
-          <span>Md2Card</span>
+        <a class="site-brand" href="./" aria-label="篇页首页">
+          <span class="site-brand-mark" aria-hidden="true">篇</span>
+          <span>篇页</span>
         </a>
         <nav class="site-primary-nav" aria-label="主导航">
           <a aria-current="page" href="./">首页</a>
@@ -57,7 +59,7 @@
           <button type="button" data-site-theme="light">浅色</button>
           <button type="button" data-site-theme="dark">暗色</button>
         </div>
-        <a class="site-github-link" href="https://github.com/haodongcui/md2card" target="_blank" rel="noreferrer" aria-label="在 GitHub 查看 Md2Card 项目源码" title="在 GitHub 查看项目源码">
+        <a class="site-github-link" href="./UPSTREAM.md" aria-label="查看上游项目与许可证说明" title="上游项目与许可证">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path fill="currentColor" d="M12 .7A11.3 11.3 0 0 0 8.4 22.72c.57.1.78-.25.78-.55v-2.16c-3.18.7-3.85-1.35-3.85-1.35-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.75 1.18 1.75 1.18 1.02 1.75 2.67 1.25 3.32.96.1-.74.4-1.25.72-1.54-2.54-.29-5.21-1.27-5.21-5.66 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.45.11-3.02 0 0 .96-.31 3.11 1.17A10.8 10.8 0 0 1 12 5.92c.97 0 1.94.13 2.85.38 2.15-1.48 3.11-1.17 3.11-1.17.62 1.57.23 2.73.11 3.02.73.8 1.18 1.82 1.18 3.07 0 4.4-2.67 5.36-5.22 5.65.41.35.78 1.04.78 2.1v3.13c0 .3.2.65.79.54A11.3 11.3 0 0 0 12 .7Z" />
           </svg>
@@ -69,13 +71,13 @@
     <main id="main-content">
       <section class="hero-section">
         <div class="hero-copy">
-          <p class="site-eyebrow">A CALM WORKSPACE FOR MARKDOWN NOTES</p>
-          <h1>把 Markdown 笔记<br /><span>变成小红书图片</span></h1>
+          <p class="site-eyebrow">文章从这里，变成图卡</p>
+          <h1>把 Markdown 笔记<br /><span>做成值得分享的图文</span></h1>
           <p class="hero-lead">
-            把平时写好的学习笔记、读书摘录、课程总结或知识整理，编排成适合连续阅读的卡片。预览、分页与导出都在你的浏览器本地完成。
+            把平时写好的学习笔记、读书摘录、课程总结或知识整理，编排成适合小红书与微信分享的连续图卡。预览、分页与导出都在你的浏览器本地完成。
           </p>
           <div class="hero-actions">
-            <a class="site-button" href="./app/">打开工作台 <span aria-hidden="true">→</span></a>
+            <a class="site-button" href="./app/">开始排版 <span aria-hidden="true">→</span></a>
             <a class="site-text-link" href="#details">了解处理细节 <span aria-hidden="true">↓</span></a>
           </div>
           <ul class="hero-proof" aria-label="产品特点">
@@ -115,7 +117,7 @@
 
       <section id="features" class="content-section feature-section">
         <div class="section-heading">
-          <p class="site-eyebrow">BUILT FOR MARKDOWN NOTES</p>
+          <p class="site-eyebrow">围绕 Markdown 的排版工作流</p>
           <h2>不必为了分享，再把笔记重新排一遍</h2>
           <p>已有的 Markdown 可以直接复用；不同内容各有合适的排版规则，也可以在需要时细调。</p>
         </div>
@@ -140,8 +142,8 @@
 
       <section class="content-section workflow-section">
         <div class="section-heading">
-          <p class="site-eyebrow">THREE STEPS</p>
-          <h2>从一篇 Markdown 笔记，到一组可发布的小红书图片</h2>
+          <p class="site-eyebrow">三步完成图文</p>
+          <h2>从一篇 Markdown，到小红书图文与微信贴图</h2>
         </div>
         <ol class="workflow-list">
           <li>
@@ -161,23 +163,21 @@
 
       <section class="content-section themes-section">
         <div class="section-heading">
-          <p class="site-eyebrow">CARD THEMES</p>
+          <p class="site-eyebrow">为不同内容切换阅读语言</p>
           <h2>不是换一层底色，而是换一套阅读语言</h2>
           <p>主题同步作用于封面、标题、表格、代码、引用、图片与页码，形成完整且可读的视觉系统。</p>
         </div>
         <div class="theme-preview-grid" aria-label="卡片主题">
           <article class="theme-preview theme-preview-minimal"><span>纯净排版</span><strong>正式、清晰</strong></article>
-          <article class="theme-preview theme-preview-research"><span>雾蓝实验室</span><strong>精确、科研</strong></article>
-          <article class="theme-preview theme-preview-editorial"><span>柔光浅紫</span><strong>现代、克制</strong></article>
-          <article class="theme-preview theme-preview-notebook"><span>雾松笔记</span><strong>清透、轻松</strong></article>
+          <article class="theme-preview theme-preview-elsewhere"><span>暗色长文</span><strong>克制、沉浸</strong></article>
         </div>
       </section>
 
       <section id="details" class="content-section details-section">
         <div class="section-heading">
-          <p class="site-eyebrow">THE DETAILS THAT MATTER</p>
+          <p class="site-eyebrow">排版细节</p>
           <h2>难处理的部分，也应该有明确的处理方式</h2>
-          <p>Md2Card 不把“导入、分页、导出”当成黑箱。下面是它为 Markdown 笔记做出的具体取舍。</p>
+          <p>本工具不把“导入、分页、导出”当成黑箱。下面说明 Markdown 图文排版的具体处理方式。</p>
         </div>
         <div class="detail-grid">
           <article class="detail-card detail-card-wide">
@@ -219,7 +219,7 @@
 
       <section class="content-section faq-section">
         <div class="section-heading">
-          <p class="site-eyebrow">PRACTICAL NOTES</p>
+          <p class="site-eyebrow">使用前说明</p>
           <h2>开始前，了解这几件事就够了</h2>
         </div>
         <div class="home-faq-list">
@@ -230,7 +230,7 @@
       </section>
 
       <section class="cta-section">
-        <p class="site-eyebrow">READY WHEN YOU ARE</p>
+          <p class="site-eyebrow">随时可以开始</p>
         <h2>从下一篇 Markdown 笔记开始，直接分享你的内容</h2>
         <p>所有内容都留在当前浏览器。打开工作台，直接开始。</p>
         <a class="site-button" href="./app/">进入 Markdown 工作台 <span aria-hidden="true">→</span></a>
@@ -238,21 +238,21 @@
     </main>
 
     <footer class="site-footer">
-      <a class="site-brand" href="./" aria-label="Md2Card 首页"><span class="site-brand-mark" aria-hidden="true">M</span><span>Md2Card</span></a>
-      <p>Markdown 转小红书图片工具，全部在本地浏览器中完成。</p>
-      <div><a href="#details">使用细节</a><a href="https://github.com/haodongcui/md2card" target="_blank" rel="noreferrer">GitHub</a></div>
+      <a class="site-brand" href="./" aria-label="篇页首页"><span class="site-brand-mark" aria-hidden="true">篇</span><span>篇页</span></a>
+      <p>Markdown 图文工作室，在本地把文章编排成连续卡片。</p>
+      <div><a href="#details">使用细节</a><a href="./UPSTREAM.md">上游来源</a></div>
     </footer>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "Md2Card",
-        "url": "https://haodongcui.github.io/md2card/",
-        "description": "在浏览器本地将 Markdown 笔记排版为小红书图片卡片，并导出 PNG ZIP。",
+        "name": "篇页",
+        "url": "./",
+        "description": "在浏览器本地将 Markdown 笔记编排为可分享的图文卡片，并导出 PNG ZIP。",
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "Web",
         "inLanguage": "zh-CN",
-        "image": "https://haodongcui.github.io/md2card/og-cover.png",
+        "image": "./og-cover.png",
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
         "featureList": ["Markdown 导入", "自动分页", "公式与表格", "本地图片自动匹配", "浏览器端 PNG ZIP 导出"]
       }

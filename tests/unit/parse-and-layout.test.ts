@@ -14,7 +14,7 @@ import {
 
 const fixture = readFileSync(resolve(import.meta.dirname, '../fixtures/technical.md'), 'utf8');
 const completeExample = readFileSync(
-  resolve(import.meta.dirname, '../../examples/Md2Card Example.md'),
+  resolve(import.meta.dirname, '../../examples/篇页示例.md'),
   'utf8',
 );
 
@@ -87,7 +87,7 @@ describe('技术 Markdown 解析', () => {
 
   it('项目自带完整样例覆盖图片、公式、表格、代码和显式分页', () => {
     const article = parseMarkdown(completeExample);
-    expect(article.title).toBe('Md2Card Example');
+    expect(article.title).toBe('篇页示例');
     expect(article.blocks.filter((block) => block.kind === 'image')).toHaveLength(3);
     expect(article.blocks.some((block) => block.kind === 'math')).toBe(true);
     expect(article.blocks.some((block) => block.kind === 'table')).toBe(true);
@@ -97,7 +97,7 @@ describe('技术 Markdown 解析', () => {
 
   it('首次打开的内置演示稿无需图片权限且可展示多页技术内容', () => {
     const article = parseMarkdown(STARTER_MARKDOWN);
-    expect(article.title).toContain('Md2Card');
+    expect(article.title).toContain('篇页');
     expect(article.blocks.some((block) => block.kind === 'image')).toBe(false);
     expect(article.blocks.filter((block) => block.kind === 'pageBreak')).toHaveLength(4);
     expect(article.blocks.some((block) => block.kind === 'math')).toBe(true);

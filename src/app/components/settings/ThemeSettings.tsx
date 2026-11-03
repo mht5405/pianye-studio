@@ -22,9 +22,7 @@ export function ThemeSettings({
         {(
           [
             { id: "minimal", name: "纯净排版", hint: "白底 · 正式" },
-            { id: "research", name: "雾蓝实验室", hint: "蓝色 · 精确" },
-            { id: "editorial", name: "柔光浅紫", hint: "浅紫 · 现代" },
-            { id: "notebook", name: "雾松笔记", hint: "绿色 · 清透" },
+            { id: "elsewhere", name: "暗色长文", hint: "炭黑 · 暖白字" },
           ] as const
         ).map((theme) => (
           <button

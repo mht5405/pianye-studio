@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200">
+  <defs>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="#ffffff" stroke-opacity=".08" stroke-width="1"/></pattern>
+    <pattern id="dots" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#171717" fill-opacity=".25"/></pattern>
+  </defs>
+  <rect width="1600" height="1200" fill="#101118"/>
+  <text x="52" y="64" fill="#f3f0e8" font-family="Arial,sans-serif" font-size="16" font-weight="700" letter-spacing="3">MD2CARD  /  ART DIRECTION STUDIES</text>
+  <text x="52" y="112" fill="#f3f0e8" font-family="Arial,sans-serif" font-size="34" font-weight="800">四种不守规矩的版式方向</text>
+  <text x="1548" y="75" text-anchor="end" fill="#a6a6ad" font-family="monospace" font-size="13">选择一版作为下一轮视觉基底</text>
+
+  <!-- A / Misprint manifesto -->
+  <g transform="translate(48 145)">
+    <rect width="736" height="470" rx="3" fill="#f6f0df"/>
+    <rect width="736" height="38" fill="#e9e0cb"/>
+    <text x="16" y="25" fill="#181818" font-family="monospace" font-size="13" font-weight="700">A / MISPRINT MANIFESTO</text>
+    <text x="720" y="25" text-anchor="end" fill="#181818" font-family="monospace" font-size="11">BRUTAL EDITORIAL · OFFSET GRID</text>
+    <rect y="38" width="736" height="432" fill="#f6f0df"/>
+    <text x="24" y="68" fill="#181818" font-family="monospace" font-size="12" font-weight="700">图文卡片</text>
+    <text x="150" y="68" fill="#181818" font-family="monospace" font-size="11">笔记的第二种生命</text>
+    <text x="710" y="68" text-anchor="end" fill="#e92358" font-family="monospace" font-size="12" font-weight="700">VOL. 01 ↗</text>
+    <path d="M22 82H714" stroke="#181818" stroke-width="2"/>
+    <text x="24" y="132" fill="#e92358" font-family="monospace" font-size="12" font-weight="700">NOT A TEMPLATE.</text>
+    <text x="18" y="201" fill="#171717" font-family="Georgia,'Noto Serif CJK SC',serif" font-size="55" font-weight="900" letter-spacing="-3">把笔记，</text>
+    <text x="18" y="259" fill="#171717" font-family="Georgia,'Noto Serif CJK SC',serif" font-size="55" font-weight="900" letter-spacing="-3">变成可以</text>
+    <text x="18" y="317" fill="#171717" font-family="Georgia,'Noto Serif CJK SC',serif" font-size="55" font-weight="900" letter-spacing="-3">翻阅的图文。</text>
+    <rect x="20" y="335" width="365" height="9" fill="#eaff00"/>
+    <text x="24" y="376" fill="#37342d" font-family="Arial,sans-serif" font-size="14">Markdown → 分页 → 可发布的图卡</text>
+    <text x="24" y="402" fill="#37342d" font-family="Arial,sans-serif" font-size="12">内容不必重写，先让版式替它说话。</text>
+    <rect x="462" y="112" width="224" height="286" fill="#e92358" transform="rotate(5 574 255)"/>
+    <rect x="442" y="122" width="224" height="286" fill="#2418d8" transform="rotate(-5 554 265)"/>
+    <rect x="452" y="116" width="224" height="286" fill="#eaff00" transform="rotate(1 564 259)"/>
+    <text x="470" y="146" fill="#171717" font-family="monospace" font-size="10" font-weight="700">CARD 01 / COVER</text>
+    <text x="470" y="222" fill="#171717" font-family="Arial,sans-serif" font-size="32" font-weight="900">一页一念</text>
+    <text x="470" y="260" fill="#171717" font-family="Georgia,serif" font-size="25" font-style="italic">read it</text>
+    <path d="M470 280H650" stroke="#171717" stroke-width="2"/>
+    <text x="470" y="310" fill="#171717" font-family="Arial,sans-serif" font-size="12">留白不是空着，</text>
+    <text x="470" y="331" fill="#171717" font-family="Arial,sans-serif" font-size="12">是给观点一个位置。</text>
+    <text x="470" y="379" fill="#171717" font-family="monospace" font-size="11">01 / 08</text>
+    <rect x="24" y="430" width="86" height="24" fill="#171717"/><text x="67" y="447" text-anchor="middle" fill="#eaff00" font-family="monospace" font-size="11" font-weight="700">OPEN STUDIO ↗</text>
+    <text x="710" y="448" text-anchor="end" fill="#181818" font-family="monospace" font-size="10">DECK 001 — 2026</text>
+  </g>
+
+  <!-- B / Archive of oddities -->
+  <g transform="translate(816 145)">
+    <rect width="736" height="470" rx="3" fill="#d9f4e8"/>
+    <rect width="736" height="38" fill="#1c1dff"/>
+    <text x="16" y="25" fill="#ffffff" font-family="monospace" font-size="13" font-weight="700">B / ARCHIVE OF ODDITIES</text>
+    <text x="720" y="25" text-anchor="end" fill="#d9f4e8" font-family="monospace" font-size="11">POST-DIGITAL FIELD NOTES</text>
+    <rect y="38" width="736" height="432" fill="#d9f4e8"/>
+    <rect x="0" y="38" width="58" height="432" fill="#ff5c35"/>
+    <text x="36" y="427" transform="rotate(-90 36 427)" fill="#161616" font-family="monospace" font-size="12" font-weight="700" letter-spacing="2">WRITE / CUT / PUBLISH / REPEAT</text>
+    <text x="82" y="68" fill="#1c1dff" font-family="monospace" font-size="11" font-weight="700">MD → SOCIAL IMAGE SYSTEM</text>
+    <text x="704" y="68" text-anchor="end" fill="#141414" font-family="monospace" font-size="11">LOCAL ONLY · ISSUE 04</text>
+    <path d="M82 80H706" stroke="#161616" stroke-width="1"/>
+    <text x="82" y="140" fill="#161616" font-family="'Noto Serif CJK SC',Georgia,serif" font-size="50" font-weight="700">把想法</text>
+    <text x="82" y="198" fill="#1c1dff" font-family="'Noto Serif CJK SC',Georgia,serif" font-size="50" font-weight="700">排成一场</text>
+    <text x="82" y="256" fill="#161616" font-family="monospace" font-size="42" font-weight="800" letter-spacing="-4">VISUAL RIOT.</text>
+    <text x="84" y="294" fill="#353b35" font-family="Arial,sans-serif" font-size="13">一份 Markdown，数张图卡；观点按自己的节奏出现。</text>
+    <rect x="82" y="319" width="153" height="34" fill="#1c1dff"/><text x="158" y="341" text-anchor="middle" fill="#fff" font-family="monospace" font-size="12" font-weight="700">MAKE A DECK ↗</text>
+    <rect x="458" y="116" width="211" height="250" fill="#fcf4da" stroke="#171717" stroke-width="1" transform="rotate(6 564 241)"/>
+    <rect x="466" y="121" width="211" height="250" fill="#ff5c35" stroke="#171717" stroke-width="1" transform="rotate(-4 571 246)"/>
+    <rect x="462" y="118" width="211" height="250" fill="#fff5d9" stroke="#171717" stroke-width="1"/>
+    <circle cx="645" cy="143" r="18" fill="#c5fa3f" stroke="#171717" stroke-width="1"/>
+    <text x="480" y="150" fill="#1c1dff" font-family="monospace" font-size="10" font-weight="700">FIELD CARD 01</text>
+    <text x="480" y="204" fill="#151515" font-family="'Noto Serif CJK SC',Georgia,serif" font-size="26" font-weight="800">关系里，</text>
+    <text x="480" y="240" fill="#151515" font-family="'Noto Serif CJK SC',Georgia,serif" font-size="26" font-weight="800">有些话不必</text>
+    <rect x="478" y="251" width="168" height="7" fill="#c5fa3f"/>
+    <text x="480" y="286" fill="#373737" font-family="Arial,sans-serif" font-size="12">留给彼此一点余地。</text>
+    <text x="480" y="344" fill="#151515" font-family="monospace" font-size="10">01 / 09</text>
+    <text x="704" y="434" text-anchor="end" fill="#141414" font-family="monospace" font-size="10">FIELD NOTES   01—09</text>
+  </g>
+
+  <!-- C / Electric greenhouse -->
+  <g transform="translate(48 650)">
+    <rect width="736" height="470" rx="3" fill="#20202a"/>
+    <rect width="736" height="38" fill="#d7ff35"/>
+    <text x="16" y="25" fill="#20202a" font-family="monospace" font-size="13" font-weight="700">C / ELECTRIC GREENHOUSE</text>
+    <text x="720" y="25" text-anchor="end" fill="#20202a" font-family="monospace" font-size="11">SOFT CHAOS · HARD TYPE</text>
+    <rect y="38" width="736" height="432" fill="#20202a"/>
+    <rect y="38" width="736" height="432" fill="url(#grid)"/>
+    <text x="24" y="68" fill="#d7ff35" font-family="monospace" font-size="12" font-weight="700">圖文卡片 / 知识的可视化出口</text>
+    <text x="712" y="68" text-anchor="end" fill="#f1efff" font-family="monospace" font-size="11">[ LOCAL RENDER ]</text>
+    <path d="M24 82H712" stroke="#77738b" stroke-width="1"/>
+    <text x="24" y="145" fill="#ff53c8" font-family="monospace" font-size="12" font-weight="700">YOUR WORDS,</text>
+    <text x="20" y="215" fill="#f1efff" font-family="Arial,sans-serif" font-size="58" font-weight="900" letter-spacing="-4">GROW</text>
+    <text x="20" y="274" fill="#d7ff35" font-family="Arial,sans-serif" font-size="58" font-weight="900" letter-spacing="-4">OUT LOUD.</text>
+    <text x="24" y="317" fill="#d5d1e5" font-family="Arial,sans-serif" font-size="13">从 Markdown，到值得保存和分享的图文。</text>
+    <text x="24" y="340" fill="#d5d1e5" font-family="Arial,sans-serif" font-size="13">内容留在本地，版式随着阅读呼吸。</text>
+    <rect x="24" y="365" width="144" height="34" rx="17" fill="#ff53c8"/><text x="96" y="387" text-anchor="middle" fill="#20202a" font-family="monospace" font-size="12" font-weight="700">START GROWING ↗</text>
+    <circle cx="550" cy="244" r="142" fill="#6628f5"/>
+    <circle cx="550" cy="244" r="116" fill="none" stroke="#d7ff35" stroke-width="2" stroke-dasharray="4 8"/>
+    <rect x="450" y="146" width="150" height="210" rx="4" fill="#f1efff" transform="rotate(-8 525 251)"/>
+    <rect x="470" y="164" width="150" height="210" rx="4" fill="#ff53c8" transform="rotate(9 545 269)"/>
+    <rect x="458" y="153" width="150" height="210" rx="4" fill="#f1efff" transform="rotate(1 533 258)"/>
+    <text x="476" y="181" fill="#6628f5" font-family="monospace" font-size="9" font-weight="700">THOUGHT / 01</text>
+    <text x="476" y="232" fill="#20202a" font-family="'Noto Serif CJK SC',Georgia,serif" font-size="22" font-weight="800">先写下来，</text>
+    <text x="476" y="262" fill="#20202a" font-family="'Noto Serif CJK SC',Georgia,serif" font-size="22" font-weight="800">再让它</text>
+    <text x="476" y="292" fill="#6628f5" font-family="Arial,sans-serif" font-size="23" font-weight="900">长出来。</text>
+    <path d="M476 309H585" stroke="#20202a" stroke-width="1"/>
+    <text x="476" y="337" fill="#20202a" font-family="monospace" font-size="9">01 / 06</text>
+    <text x="712" y="435" text-anchor="end" fill="#d7ff35" font-family="monospace" font-size="10">VIBRANT BY DESIGN   ✳</text>
+  </g>
+
+  <!-- D / Newspaper from the future -->
+  <g transform="translate(816 650)">
+    <rect width="736" height="470" rx="3" fill="#f7f4eb"/>
+    <rect width="736" height="38" fill="#d32d21"/>
+    <text x="16" y="25" fill="#fff7e8" font-family="monospace" font-size="13" font-weight="700">D / NEWSPAPER FROM THE FUTURE</text>
+    <text x="720" y="25" text-anchor="end" fill="#fff7e8" font-family="monospace" font-size="11">TYPE COLLISION · DAILY EDITION</text>
+    <rect y="38" width="736" height="432" fill="#f7f4eb"/>
+    <text x="24" y="67" fill="#161616" font-family="Georgia,serif" font-size="12" font-weight="700" letter-spacing="2">THE DAILY NOTE</text>
+    <text x="712" y="67" text-anchor="end" fill="#161616" font-family="monospace" font-size="10">TUESDAY / NO. 11 / FREE</text>
+    <path d="M24 78H712" stroke="#161616" stroke-width="3"/>
+    <text x="24" y="110" fill="#d32d21" font-family="monospace" font-size="11" font-weight="700">SPECIAL ISSUE — YOUR NOTES IN PUBLIC</text>
+    <text x="20" y="190" fill="#161616" font-family="'Noto Serif CJK SC',Georgia,serif" font-size="54" font-weight="900" letter-spacing="-4">把内容</text>
+    <text x="20" y="249" fill="#161616" font-family="'Noto Serif CJK SC',Georgia,serif" font-size="54" font-weight="900" letter-spacing="-4">做成头条</text>
+    <rect x="29" y="263" width="288" height="10" fill="#d32d21"/>
+    <text x="24" y="309" fill="#37342d" font-family="Arial,sans-serif" font-size="13">文章、摘录、课程笔记，按页读，按页分享。</text>
+    <text x="24" y="333" fill="#37342d" font-family="Arial,sans-serif" font-size="13">像编辑一份小报一样，完成自己的图文。</text>
+    <rect x="24" y="358" width="118" height="32" fill="#161616"/><text x="83" y="379" text-anchor="middle" fill="#f7f4eb" font-family="monospace" font-size="11" font-weight="700">读稿 / 排版</text>
+    <rect x="416" y="109" width="280" height="272" fill="#c5caff" stroke="#161616" stroke-width="2"/>
+    <text x="436" y="137" fill="#d32d21" font-family="monospace" font-size="11" font-weight="700">EDITOR'S PICK / 01</text>
+    <text x="434" y="193" fill="#161616" font-family="'Noto Serif CJK SC',Georgia,serif" font-size="29" font-weight="900">成年以后，</text>
+    <text x="434" y="231" fill="#161616" font-family="'Noto Serif CJK SC',Georgia,serif" font-size="29" font-weight="900">和父母相处</text>
+    <text x="434" y="269" fill="#d32d21" font-family="'Noto Serif CJK SC',Georgia,serif" font-size="29" font-weight="900">也需要边界</text>
+    <path d="M436 290H675" stroke="#161616" stroke-width="1"/>
+    <text x="436" y="316" fill="#28272a" font-family="Arial,sans-serif" font-size="12">亲近，不等于没有距离。</text>
+    <text x="436" y="358" fill="#161616" font-family="monospace" font-size="10">01 / 07      READ MORE →</text>
+    <rect x="656" y="103" width="60" height="60" fill="#d7ff35" stroke="#161616" stroke-width="2" transform="rotate(8 686 133)"/>
+    <text x="686" y="139" text-anchor="middle" fill="#161616" font-family="monospace" font-size="11" font-weight="900" transform="rotate(8 686 139)">NEW!</text>
+    <text x="712" y="435" text-anchor="end" fill="#161616" font-family="monospace" font-size="10">INK, PAPER &amp; A LITTLE DISORDER</text>
+  </g>
+
+  <path d="M48 1147H1552" stroke="#4a4b55" stroke-width="1"/>
+  <text x="48" y="1177" fill="#a6a6ad" font-family="monospace" font-size="12">A 朋克宣言　 /　 B 异质档案　 /　 C 电气温室　 /　 D 未来小报</text>
+  <text x="1552" y="1177" text-anchor="end" fill="#d7ff35" font-family="monospace" font-size="12" font-weight="700">先选方向，再进入完整页面设计 →</text>
+</svg>

@@ -1,5 +1,3 @@
 User-agent: *
 Allow: /
 Disallow: /app/
-
-Sitemap: https://haodongcui.github.io/md2card/sitemap.xml

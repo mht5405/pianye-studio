@@ -431,6 +431,21 @@
   box-shadow: none;
 }
 
+.card-page .card-cover.has-cover-image,
+.measure-stage .card-cover.has-cover-image {
+  background-position: center;
+  background-size: cover;
+  color: #fff;
+}
+.card-page .card-cover.has-cover-image .card-cover-decoration,
+.measure-stage .card-cover.has-cover-image .card-cover-decoration { display: none; }
+.card-page .card-cover.has-cover-image .card-cover-title,
+.measure-stage .card-cover.has-cover-image .card-cover-title,
+.card-page .card-cover.has-cover-image .card-cover-subtitle,
+.measure-stage .card-cover.has-cover-image .card-cover-subtitle { color: #fff; text-shadow: 0 2px 18px rgba(0,0,0,.38); }
+.card-page .card-cover.has-cover-image .card-cover-kicker,
+.measure-stage .card-cover.has-cover-image .card-cover-kicker { color: #f0aa33; text-shadow: 0 1px 8px rgba(0,0,0,.5); }
+
 .card-page .card-cover-decoration,
 .measure-stage .card-cover-decoration {
   right: -42px;

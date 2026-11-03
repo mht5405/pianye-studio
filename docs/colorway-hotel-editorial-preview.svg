@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency=".72" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="table" tableValues="0 .09"/></feComponentTransfer>
+      <feBlend in="SourceGraphic" mode="multiply"/>
+    </filter>
+    <pattern id="paper" width="1600" height="1000" patternUnits="userSpaceOnUse">
+      <rect width="1600" height="1000" fill="#f3efdf"/>
+      <rect width="1600" height="1000" fill="url(#dots)" opacity=".08"/>
+    </pattern>
+    <pattern id="brick" width="56" height="28" patternUnits="userSpaceOnUse">
+      <rect width="56" height="28" fill="#b96540"/>
+      <path d="M0 1H56M0 27H56M28 1V14M0 14H56M10 14V27" stroke="#813f2c" stroke-width="2" opacity=".6"/>
+      <path d="M0 0H56V28H0Z" fill="url(#paper)" opacity=".08"/>
+    </pattern>
+    <filter id="shadow" x="-30%" y="-30%" width="170%" height="180%">
+      <feDropShadow dx="12" dy="14" stdDeviation="0" flood-color="#090d29" flood-opacity=".24"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#paper)"/>
+  <rect x="42" y="34" width="1516" height="932" fill="none" stroke="#10142e" stroke-width="2"/>
+
+  <!-- Header -->
+  <circle cx="100" cy="91" r="29" fill="#10142e"/>
+  <text x="100" y="100" text-anchor="middle" fill="#f3efdf" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="24" font-weight="900">图</text>
+  <text x="143" y="89" fill="#10142e" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="20" font-weight="900" letter-spacing="1">图文卡片</text>
+  <text x="144" y="111" fill="#8b5b45" font-family="monospace" font-size="9" letter-spacing="1.5">NOTES MADE VISIBLE</text>
+  <path d="M300 67V115" stroke="#b9ae9d" stroke-width="1"/>
+  <text x="326" y="96" fill="#10142e" font-family="Arial,sans-serif" font-size="13" font-weight="700">首页</text>
+  <text x="388" y="96" fill="#74685d" font-family="Arial,sans-serif" font-size="13">工作台</text>
+  <text x="451" y="96" fill="#74685d" font-family="Arial,sans-serif" font-size="13">视觉档案</text>
+  <text x="1480" y="93" text-anchor="end" fill="#74685d" font-family="monospace" font-size="10">STAY CURIOUS / KEEP A NOTE</text>
+  <rect x="1488" y="69" width="41" height="41" rx="20" fill="#bd6541"/>
+  <path d="M1500 89H1517M1508 81V98" stroke="#fff8e9" stroke-width="2"/>
+  <path d="M72 137H1528" stroke="#10142e" stroke-width="1.5"/>
+
+  <!-- Left editorial hero -->
+  <text x="92" y="205" fill="#bd6541" font-family="monospace" font-size="12" font-weight="700" letter-spacing="2">LOCAL EDITION   /   NO. 01</text>
+  <text x="86" y="314" fill="#10142e" font-family="'Noto Serif CJK SC',Georgia,serif" font-size="79" font-weight="900" letter-spacing="-5">把笔记</text>
+  <text x="86" y="404" fill="#10142e" font-family="'Noto Serif CJK SC',Georgia,serif" font-size="79" font-weight="900" letter-spacing="-5">做成图文</text>
+  <rect x="92" y="426" width="319" height="12" fill="#bd6541"/>
+  <text x="94" y="486" fill="#4b473f" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="19">一份 Markdown，变成一组能被翻阅的卡片。</text>
+  <text x="94" y="521" fill="#71675c" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="15">写作留在本地，分页、封面和导出在这里完成。</text>
+  <rect x="92" y="567" width="194" height="54" fill="#10142e"/>
+  <text x="189" y="601" text-anchor="middle" fill="#f3efdf" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="15" font-weight="700">开始排一组图文　↗</text>
+  <text x="316" y="600" fill="#10142e" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="14" font-weight="700">先看看怎么工作　↓</text>
+
+  <!-- A little hotel-sign inspired color block, without copying the mark -->
+  <rect x="92" y="687" width="590" height="198" fill="#e8e0cd" stroke="#10142e" stroke-width="1"/>
+  <rect x="92" y="687" width="13" height="198" fill="#bd6541"/>
+  <text x="130" y="725" fill="#10142e" font-family="monospace" font-size="11" font-weight="700" letter-spacing="1">A GOOD PLACE FOR YOUR IDEAS</text>
+  <text x="128" y="785" fill="#10142e" font-family="'Noto Serif CJK SC',Georgia,serif" font-size="31" font-weight="800">让文字住进更好的版式里。</text>
+  <path d="M130 808H642" stroke="#c6b9a3" stroke-width="1"/>
+  <text x="130" y="842" fill="#625b52" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="13">保留原文的呼吸感 · 把封面图片换成你的故事 · 来源清楚标注</text>
+
+  <!-- Right collage -->
+  <rect x="764" y="176" width="696" height="620" fill="url(#brick)"/>
+  <rect x="764" y="176" width="696" height="620" fill="#b96540" opacity=".18"/>
+  <path d="M795 176V796M1428 176V796" stroke="#f3efdf" stroke-width="4" opacity=".62"/>
+  <rect x="854" y="232" width="336" height="464" fill="#10142e" filter="url(#shadow)" transform="rotate(-4 1022 464)"/>
+  <rect x="842" y="221" width="336" height="464" fill="#f8f4e7" stroke="#10142e" stroke-width="1" filter="url(#shadow)" transform="rotate(-1 1010 453)"/>
+  <text x="875" y="258" fill="#bd6541" font-family="monospace" font-size="10" font-weight="700">COVER / 01</text>
+  <path d="M875 270H1145" stroke="#d0c6b4" stroke-width="1"/>
+  <text x="875" y="332" fill="#10142e" font-family="'Noto Serif CJK SC',Georgia,serif" font-size="35" font-weight="900">成年以后</text>
+  <text x="875" y="378" fill="#10142e" font-family="'Noto Serif CJK SC',Georgia,serif" font-size="35" font-weight="900">怎么和父母</text>
+  <text x="875" y="424" fill="#bd6541" font-family="'Noto Serif CJK SC',Georgia,serif" font-size="35" font-weight="900">重新相处？</text>
+  <rect x="875" y="449" width="207" height="8" fill="#bd6541"/>
+  <text x="875" y="503" fill="#514b43" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="14">亲近不等于没有边界，</text>
+  <text x="875" y="528" fill="#514b43" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="14">爱也需要新的相处方式。</text>
+  <circle cx="1120" cy="605" r="30" fill="#10142e"/>
+  <text x="1120" y="610" text-anchor="middle" fill="#f3efdf" font-family="monospace" font-size="10" font-weight="700">01 / 08</text>
+
+  <rect x="1163" y="326" width="235" height="336" fill="#f3efdf" stroke="#10142e" stroke-width="1" filter="url(#shadow)" transform="rotate(6 1280 494)"/>
+  <text x="1203" y="383" fill="#bd6541" font-family="monospace" font-size="10" font-weight="700">A SMALL OBSERVATION</text>
+  <text x="1203" y="436" fill="#10142e" font-family="'Noto Serif CJK SC',Georgia,serif" font-size="24" font-weight="800">“我为你好”</text>
+  <text x="1203" y="473" fill="#10142e" font-family="'Noto Serif CJK SC',Georgia,serif" font-size="24" font-weight="800">也要留一点</text>
+  <text x="1203" y="510" fill="#bd6541" font-family="'Noto Serif CJK SC',Georgia,serif" font-size="24" font-weight="800">商量的空间。</text>
+  <path d="M1203 532H1360" stroke="#10142e" stroke-width="1"/>
+  <text x="1203" y="562" fill="#514b43" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="12">不是疏远，是把关系</text>
+  <text x="1203" y="582" fill="#514b43" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="12">放回两个人都舒服的位置。</text>
+
+  <!-- Footer annotations -->
+  <rect x="1324" y="725" width="170" height="43" fill="#f3efdf" stroke="#10142e" stroke-width="1" transform="rotate(-4 1409 746)"/>
+  <text x="1409" y="752" text-anchor="middle" fill="#10142e" font-family="monospace" font-size="10" font-weight="700" transform="rotate(-4 1409 752)">PAPER / INK / MEMORY</text>
+  <text x="764" y="847" fill="#10142e" font-family="monospace" font-size="11" font-weight="700" letter-spacing="1">THE READING ROOM</text>
+  <text x="1460" y="847" text-anchor="end" fill="#10142e" font-family="monospace" font-size="11">IVORY · INK · TERRACOTTA</text>
+  <path d="M764 862H1460" stroke="#10142e" stroke-width="1.5"/>
+  <text x="764" y="897" fill="#6f6258" font-family="Arial,'Noto Sans CJK SC',sans-serif" font-size="13">排版像一间有性格的旅店：暖、安静、带一点旧招牌的锋芒。</text>
+  <text x="1530" y="930" text-anchor="end" fill="#bd6541" font-family="monospace" font-size="10" font-weight="700">VISUAL STUDY / 01</text>
+</svg>

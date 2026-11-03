@@ -34,17 +34,8 @@ import { ThemeSettings } from "./components/settings/ThemeSettings";
 import { WorkspaceHeader } from "./components/WorkspaceHeader";
 
 function normalizeCardTheme(value: unknown): LayoutConfig["cardTheme"] {
-  if (
-    value === "minimal" ||
-    value === "editorial" ||
-    value === "notebook" ||
-    value === "research"
-  )
-    return value;
-  if (value === "paper" || value === "ink" || value === "mono")
-    return "minimal";
-  if (value === "apricot" || value === "obsidian") return "notebook";
-  if (value === "sage" || value === "blueprint") return "research";
+  if (value === "minimal" || value === "elsewhere") return value;
+  if (value === "paper" || value === "ink" || value === "mono") return "minimal";
   return DEFAULT_CONFIG.cardTheme;
 }
 
@@ -210,7 +201,7 @@ export function App() {
   });
 
   useEffect(() => {
-    document.title = `${articleName} · Md2Card`;
+    document.title = `${articleName} · 篇页`;
   }, [articleName]);
 
   const updateConfig = <Key extends keyof LayoutConfig>(
@@ -248,6 +239,7 @@ export function App() {
     }
     const nextMarkdown = await file.text();
     setMarkdown(nextMarkdown);
+    setConfig((previous) => ({ ...previous, coverImageDataUrl: "" }));
     setSourceFileName(file.name);
     setTitleOverride("");
     invalidateLayout();
@@ -260,6 +252,7 @@ export function App() {
       markdown.trim() ||
         titleOverride.trim() ||
         sourceFileName ||
+        config.coverImageDataUrl ||
         localImages.length ||
         markdownAssetImport,
     );
@@ -274,6 +267,7 @@ export function App() {
     setMarkdown("");
     setTitleOverride("");
     setSourceFileName("");
+    setConfig((previous) => ({ ...previous, coverImageDataUrl: "" }));
     invalidateLayout();
     clearArticleResources();
   };

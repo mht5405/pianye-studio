@@ -4,6 +4,8 @@ import { inlineText } from '../parser/parse-markdown';
 
 const CONTENT_SAFETY_BUFFER = 53;
 const PAGE_NUMBER_HEIGHT = 35;
+const AUTHOR_AVATAR_FOOTER_HEIGHT = 72;
+const AUTHOR_NAME_FOOTER_HEIGHT = 48;
 
 const DENSITY_FACTOR: Record<LayoutConfig['density'], number> = {
   relaxed: 1.14,
@@ -13,10 +15,14 @@ const DENSITY_FACTOR: Record<LayoutConfig['density'], number> = {
 };
 
 function contentCapacity(config: LayoutConfig): number {
+  const hasAuthorSignature = config.showAuthorOnContent && Boolean(config.authorName.trim() || config.authorAvatarDataUrl);
+  const footerHeight = hasAuthorSignature
+    ? config.authorAvatarDataUrl ? AUTHOR_AVATAR_FOOTER_HEIGHT : AUTHOR_NAME_FOOTER_HEIGHT
+    : config.showPageNumber ? PAGE_NUMBER_HEIGHT : 0;
   return canvasHeight(config.ratio)
     - config.cardVerticalPadding
     - cardBottomPadding(config)
-    - (config.showPageNumber ? PAGE_NUMBER_HEIGHT : 0)
+    - footerHeight
     - CONTENT_SAFETY_BUFFER;
 }
 
@@ -179,13 +185,13 @@ function isShortLead(fragment: PageFragment, height: number, capacity: number): 
 
 function headingTailPercent(depth: number, config: LayoutConfig): number {
   if (depth <= 1) return 100;
-  if (depth === 2) return config.headingH2TailPercent;
   if (depth === 3) return config.headingH3TailPercent;
   if (depth === 4) return config.headingH4TailPercent;
   return 0;
 }
 
 function beforeSpacingFor(block: Block, config: LayoutConfig): number {
+  if (block.id.startsWith('generated-source-')) return 6;
   if (block.kind === 'heading' && block.depth === 2) return config.headingH2BeforeSpacing;
   if (block.kind === 'heading' && block.depth === 3) return config.headingH3BeforeSpacing;
   return config.blockGap;
@@ -291,7 +297,7 @@ export function createPagePlan(
       if (block.depth <= 1 && pageHasContent) {
         flush();
         beforeSpacing = 0;
-      } else if (pageHasContent) {
+      } else if (pageHasContent && block.depth !== 2) {
         const cluster = headingClusterHeight(expanded, index, config, measurements, capacity);
         const tailGuard = capacity * (headingTailPercent(block.depth, config) / 100);
         // The setting describes the zone where the heading itself must not

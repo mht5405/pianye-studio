@@ -126,7 +126,7 @@ export function usePreviewWorkspace({
     document.addEventListener("pointercancel", stop);
   };
 
-  const pageHeight = ratio === "3:4" ? 1440 : 1620;
+  const pageHeight = ratio === "3:4" ? 1440 : ratio === "2:3" ? 1620 : 1800;
   const previewStyle = `--preview-columns: ${effectivePreviewColumns}; --preview-scale: ${previewScale}; --preview-card-width: ${Math.round(1080 * previewScale)}px; --preview-card-height: ${Math.round(pageHeight * previewScale)}px;`;
 
   return {

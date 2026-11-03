@@ -30,11 +30,21 @@ export interface ArticleDocument {
   title: string;
   blocks: Block[];
   diagnostics: Diagnostic[];
+  metadata?: ArticleMetadata;
 }
 
+export interface ArticleMetadata {
+  title?: string;
+  coverSource?: string;
+  coverSourceUrl?: string;
+  coverLicense?: string;
+  references: string[];
+}
+
+
 export type Density = 'relaxed' | 'balanced' | 'compact' | 'custom';
-export type CanvasRatio = '3:4' | '2:3';
-export type CardTheme = 'minimal' | 'editorial' | 'notebook' | 'research';
+export type CanvasRatio = '3:4' | '2:3' | '3:5';
+export type CardTheme = 'minimal' | 'elsewhere';
 export type CodeBlockAppearance = 'theme' | 'macos';
 export type CoverMode = 'none' | 'integrated' | 'standalone';
 
@@ -44,6 +54,11 @@ export interface PageCover {
   title: string;
   kicker?: string;
   subtitle?: string;
+  imageDataUrl?: string;
+  imagePositionY?: number;
+  authorName?: string;
+  authorAvatarDataUrl?: string;
+  showAuthor?: boolean;
 }
 
 export interface LayoutConfig {
@@ -57,7 +72,6 @@ export interface LayoutConfig {
   codeFontSize: number;
   tableFontSize: number;
   mathScale: number;
-  headingH2TailPercent: number;
   headingH3TailPercent: number;
   headingH4TailPercent: number;
   codeLineNumbers: boolean;
@@ -70,21 +84,28 @@ export interface LayoutConfig {
   coverMode: CoverMode;
   coverKicker: string;
   coverSubtitle: string;
+  coverImageDataUrl: string;
+  coverImagePositionY: number;
+  coverSource: string;
+  coverSourceUrl: string;
+  authorName: string;
+  authorAvatarDataUrl: string;
+  showAuthorOnCover: boolean;
+  showAuthorOnContent: boolean;
   exportScale: 1 | 2;
 }
 
 export const DEFAULT_CONFIG: LayoutConfig = {
-  ratio: '3:4',
+  ratio: '3:5',
   density: 'balanced',
-  bodyFontSize: 30,
-  bodyLineHeight: 1.62,
-  blockGap: 16,
-  headingH2BeforeSpacing: 32,
-  headingH3BeforeSpacing: 20,
-  codeFontSize: 23,
-  tableFontSize: 23,
+  bodyFontSize: 40,
+  bodyLineHeight: 1.66,
+  blockGap: 27,
+  headingH2BeforeSpacing: 40,
+  headingH3BeforeSpacing: 26,
+  codeFontSize: 30,
+  tableFontSize: 30,
   mathScale: 1,
-  headingH2TailPercent: 22,
   headingH3TailPercent: 11,
   headingH4TailPercent: 6,
   codeLineNumbers: false,
@@ -93,10 +114,18 @@ export const DEFAULT_CONFIG: LayoutConfig = {
   cardVerticalPadding: 67,
   imageMaxHeightPercent: 53,
   showPageNumber: true,
-  cardTheme: 'minimal',
-  coverMode: 'integrated',
+  cardTheme: 'elsewhere',
+  coverMode: 'standalone',
   coverKicker: '',
   coverSubtitle: '',
+  coverImageDataUrl: '',
+  coverImagePositionY: 50,
+  coverSource: '',
+  coverSourceUrl: '',
+  authorName: '',
+  authorAvatarDataUrl: '',
+  showAuthorOnCover: false,
+  showAuthorOnContent: false,
   exportScale: 1,
 };
 
@@ -104,28 +133,28 @@ export const DENSITY_PRESETS: Record<Exclude<Density, 'custom'>, Pick<LayoutConf
   'bodyFontSize' | 'bodyLineHeight' | 'blockGap' | 'headingH2BeforeSpacing' | 'headingH3BeforeSpacing' | 'codeFontSize'
 >> = {
   relaxed: {
-    bodyFontSize: 32,
-    bodyLineHeight: 1.68,
-    blockGap: 21,
-    headingH2BeforeSpacing: 40,
-    headingH3BeforeSpacing: 24,
-    codeFontSize: 24,
+    bodyFontSize: 44,
+    bodyLineHeight: 1.72,
+    blockGap: 34,
+    headingH2BeforeSpacing: 48,
+    headingH3BeforeSpacing: 30,
+    codeFontSize: 33,
   },
   balanced: {
-    bodyFontSize: 30,
-    bodyLineHeight: 1.62,
-    blockGap: 16,
-    headingH2BeforeSpacing: 32,
-    headingH3BeforeSpacing: 20,
-    codeFontSize: 23,
+    bodyFontSize: 40,
+    bodyLineHeight: 1.66,
+    blockGap: 27,
+    headingH2BeforeSpacing: 40,
+    headingH3BeforeSpacing: 26,
+    codeFontSize: 30,
   },
   compact: {
-    bodyFontSize: 27,
-    bodyLineHeight: 1.54,
-    blockGap: 11,
-    headingH2BeforeSpacing: 24,
-    headingH3BeforeSpacing: 14,
-    codeFontSize: 21,
+    bodyFontSize: 36,
+    bodyLineHeight: 1.56,
+    blockGap: 18,
+    headingH2BeforeSpacing: 30,
+    headingH3BeforeSpacing: 18,
+    codeFontSize: 28,
   },
 };
 
