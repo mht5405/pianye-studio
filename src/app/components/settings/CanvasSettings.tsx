@@ -78,11 +78,11 @@ export function CanvasSettings({ config, articleName, onConfigChange, onEditArti
         <label class="text-field">副标题（可选）<input value={config.coverSubtitle} placeholder="一句话说明文章内容" onInput={(event) => onConfigChange("coverSubtitle", event.currentTarget.value)} /></label>
       </div>
       <label class="text-field cover-image-picker">替换封面图片<input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => void setCoverImage(event.currentTarget.files?.[0])} /><small>保留原图比例并压缩保存；调整下方滑杆可改变封面取景高度。</small></label>
+      <div class="cover-copy-fields">
+        <label class="text-field">封面图片来源<input value={config.coverSource} placeholder="例如：作者/机构名称、作品名称或图库名称" onInput={(event) => onConfigChange("coverSource", event.currentTarget.value)} /><small>填写后会自动附加到图文末尾；使用封面图片时必填，也可在 Markdown 的 cover_source 中填写。</small></label>
+        <label class="text-field">来源链接（可选）<input type="url" value={config.coverSourceUrl} placeholder="https://…" onInput={(event) => onConfigChange("coverSourceUrl", event.currentTarget.value)} /></label>
+      </div>
       {config.coverImageDataUrl && <>
-        <div class="cover-copy-fields">
-          <label class="text-field">封面图片来源<input value={config.coverSource} placeholder="例如：作者/机构名称、作品名称或图库名称" onInput={(event) => onConfigChange("coverSource", event.currentTarget.value)} /><small>填写后会自动附加到图文末尾的“来源与说明”；也可在 Markdown 的 cover_source 中填写。</small></label>
-          <label class="text-field">来源链接（可选）<input type="url" value={config.coverSourceUrl} placeholder="https://…" onInput={(event) => onConfigChange("coverSourceUrl", event.currentTarget.value)} /></label>
-        </div>
         <label class="range-label cover-position-control">封面图片上下位置 <output>{config.coverImagePositionY}%</output><input type="range" min="0" max="100" step="1" value={config.coverImagePositionY} onInput={(event) => onConfigChange("coverImagePositionY", Number(event.currentTarget.value))} /><small><span>上</span><span>下</span></small></label>
         <button type="button" class="clear-cover-image" onClick={() => { onConfigChange("coverImageDataUrl", ""); onConfigChange("coverImagePositionY", 50); }}>移除封面图片</button>
       </>}
