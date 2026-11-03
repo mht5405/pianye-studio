@@ -27,7 +27,7 @@ npm install
 npm run dev
 ```
 
-打开终端输出的本地地址，再进入 `/app/`。也可以导入 [`examples/篇页示例.md`](./examples/篇页示例.md) 体验完整样例；该样例含本地图片，请一并保留 `examples/images/` 目录。
+打开终端输出的本地地址，再进入 `/app/`。请通过开发服务器访问，不要直接双击项目中的 `index.html`：`file://` 方式无法正常启动工作台。也可以导入 [`examples/篇页示例.md`](./examples/篇页示例.md) 体验完整样例；该样例含本地图片，请一并保留 `examples/images/` 目录。
 
 ## 封面来源与参考资料
 
@@ -46,7 +46,7 @@ references:
 正文从这里开始……
 ```
 
-封面图片可在工作台的“画布”设置中选择；来源内容由使用者填写。更多字段示例见 [`examples/cover-and-sources.md`](./examples/cover-and-sources.md)。
+封面图片可在工作台的“画布”设置中选择；使用封面图片时，须在工作台或 Markdown 中填写封面图片来源，才能通过导出检查。来源内容由使用者填写。更多字段示例见 [`examples/cover-and-sources.md`](./examples/cover-and-sources.md)。
 
 ## 开发与部署
 
