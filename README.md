@@ -2,7 +2,7 @@
 
 > 把写好的 Markdown，编排成适合小红书与微信分享的连续图卡。
 
-[GitHub 项目仓库](https://github.com/mht5405/pianye-studio) · [来源与许可说明](./UPSTREAM.md)
+[在线工作台](https://mht5405.github.io/pianye-studio/) · [GitHub 项目仓库](https://github.com/mht5405/pianye-studio) · [来源与许可说明](./UPSTREAM.md)
 
 ![篇页新版主页](./docs/homepage-preview.png)
 
@@ -56,7 +56,7 @@ npm run build  # 类型检查并构建 dist/
 npm run preview
 ```
 
-仓库包含 GitHub Actions Pages 工作流：推送至 `main` 后运行测试和构建，再部署 `dist/`。要启用在线站点，请在仓库 **Settings → Pages** 将发布来源设为 **GitHub Actions**。未完成首次部署前，请使用上方的本地启动方式。
+在线工作台由 GitHub Pages 提供：推送至 `main` 后，GitHub Actions 会运行测试、构建并部署 `dist/`。也可以克隆仓库，在本地启动开发服务器。
 
 ## 项目来源与许可
 
