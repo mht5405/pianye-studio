@@ -9,15 +9,17 @@ import './styles/cards/themes/elsewhere.css';
 import './styles/cards/code-appearance.css';
 import './styles/cards/theme-picker.css';
 import './styles/workbench.css';
-import './styles/studio.css';
-import './styles/proofroom.css';
+import studioStyles from './styles/studio.css?inline';
+import proofroomStyles from './styles/proofroom.css?inline';
 import readingRoomStyles from './styles/reading-room.css?inline';
 import { App } from './app/App';
 
-// Vite may load shared CSS before app.css in production. Apply the final
-// workspace overrides after all extracted styles, matching development order.
-const readingRoomStyle = document.createElement('style');
-readingRoomStyle.textContent = readingRoomStyles;
-document.head.appendChild(readingRoomStyle);
+// Shared CSS can be emitted before app.css by Vite. Keep all workspace
+// overrides after the base styles and in the same order in both builds.
+for (const css of [studioStyles, proofroomStyles, readingRoomStyles]) {
+  const style = document.createElement('style');
+  style.textContent = css;
+  document.head.appendChild(style);
+}
 
 render(<App />, document.getElementById('app')!);
