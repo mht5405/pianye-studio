@@ -17,6 +17,9 @@ const completeExample = readFileSync(
   resolve(import.meta.dirname, '../../examples/篇页示例.md'),
   'utf8',
 );
+// These fixtures use dimensions from the original 3:4 pagination cases;
+// keep their geometry explicit as the product default is now 3:5.
+const PAGE_TEST_CONFIG = { ...DEFAULT_CONFIG, ratio: '3:4' as const };
 
 describe('技术 Markdown 解析', () => {
   it('新文章默认使用 macOS 浅色代码块外观', () => {
@@ -116,49 +119,49 @@ describe('技术 Markdown 解析', () => {
     expect(fragments.every((fragment) => fragment.block.kind === 'table' && fragment.block.rows[0][0][0].kind === 'text' && fragment.block.rows[0][0][0].value === '名称')).toBe(true);
   });
 
-  it('将页尾的 H2、短引言、首个 H3 与首段作为一个标题簇回退到下一页', () => {
+  it('H2 正文可沿当前页顺延，H3 仍会携带首段避开页尾', () => {
     const article = parseMarkdown('# 标题\n\n前置正文。\n\n## 二级标题\n\n短引言。\n\n### 三级标题\n\n三级标题的首段正文。');
     const [before, h2, lead, h3, body] = article.blocks;
-    const plan = createPagePlan(article, DEFAULT_CONFIG, {
+    const plan = createPagePlan(article, PAGE_TEST_CONFIG, {
       [before.id]: 900,
       [h2.id]: 90,
       [lead.id]: 90,
       [h3.id]: 70,
       [body.id]: 200,
     });
-    expect(plan.pages[0].fragments.map((fragment) => fragment.sourceId)).toEqual([before.id]);
-    expect(plan.pages[1].fragments.map((fragment) => fragment.sourceId)).toEqual([h2.id, lead.id, h3.id, body.id]);
+    expect(plan.pages[0].fragments.map((fragment) => fragment.sourceId)).toEqual([before.id, h2.id, lead.id]);
+    expect(plan.pages[1].fragments.map((fragment) => fragment.sourceId)).toEqual([h3.id, body.id]);
   });
 
-  it('将 H2、短引言及其后的实质代码块一起移出页尾', () => {
+  it('H2 不触发强制标题簇换页，后续代码在空间不足时自然顺延', () => {
     const article = parseMarkdown('# 标题\n\n前置正文。\n\n## 二级标题\n\n短引言。\n\n```text\n第一行\n第二行\n```');
     const [before, h2, lead, code] = article.blocks;
-    const plan = createPagePlan(article, DEFAULT_CONFIG, {
+    const plan = createPagePlan(article, PAGE_TEST_CONFIG, {
       [before.id]: 700,
       [h2.id]: 90,
       [lead.id]: 90,
       [code.id]: 350,
     });
-    expect(plan.pages[0].fragments.map((fragment) => fragment.sourceId)).toEqual([before.id]);
-    expect(plan.pages[1].fragments.map((fragment) => fragment.sourceId)).toEqual([h2.id, lead.id, code.id]);
+    expect(plan.pages[0].fragments.map((fragment) => fragment.sourceId)).toEqual([before.id, h2.id, lead.id]);
+    expect(plan.pages[1].fragments.map((fragment) => fragment.sourceId)).toEqual([code.id]);
   });
 
-  it('将标题本身计入页尾安全区，避免标题文字进入保留区域', () => {
+  it('H2 不启用页尾安全区，内容在页面容量允许时继续排入当前页', () => {
     const article = parseMarkdown('# 标题\n\n前置正文。\n\n## 二级标题\n\n紧随的正文。');
     const [before, h2, body] = article.blocks;
-    const plan = createPagePlan(article, DEFAULT_CONFIG, {
+    const plan = createPagePlan(article, PAGE_TEST_CONFIG, {
       [before.id]: 900,
       [h2.id]: 90,
       [body.id]: 100,
     });
-    expect(plan.pages[0].fragments.map((fragment) => fragment.sourceId)).toEqual([before.id]);
-    expect(plan.pages[1].fragments.map((fragment) => fragment.sourceId)).toEqual([h2.id, body.id]);
+    expect(plan.pages).toHaveLength(1);
+    expect(plan.pages[0].fragments.map((fragment) => fragment.sourceId)).toEqual([before.id, h2.id, body.id]);
   });
 
   it('将 H2 段前留白计入分页，并在新页首块移除该留白', () => {
     const article = parseMarkdown('# 标题\n\n前置正文。\n\n## 二级标题\n\n紧随的正文。');
     const [before, h2, body] = article.blocks;
-    const config = { ...DEFAULT_CONFIG, headingH2TailPercent: 0 };
+    const config = PAGE_TEST_CONFIG;
     const fits = createPagePlan(article, config, {
       [before.id]: 970,
       [h2.id]: 90,
@@ -181,8 +184,8 @@ describe('技术 Markdown 解析', () => {
     const article = parseMarkdown('# 标题\n\n第一段。\n\n第二段。');
     const [first, second] = article.blocks;
     const measurements = { [first.id]: 700, [second.id]: 600 };
-    const balanced = createPagePlan(article, DEFAULT_CONFIG, measurements);
-    const relaxed = createPagePlan(article, { ...DEFAULT_CONFIG, density: 'relaxed', ...DENSITY_PRESETS.relaxed }, measurements);
+    const balanced = createPagePlan(article, PAGE_TEST_CONFIG, measurements);
+    const relaxed = createPagePlan(article, { ...PAGE_TEST_CONFIG, density: 'relaxed', ...DENSITY_PRESETS.relaxed }, measurements);
     expect(balanced.pages).toHaveLength(2);
     expect(relaxed.pages).toHaveLength(2);
   });
@@ -190,7 +193,7 @@ describe('技术 Markdown 解析', () => {
   it('根据 H3 的可调页尾安全区避免三级标题孤立在底部', () => {
     const article = parseMarkdown('# 标题\n\n前置正文。\n\n### 三级标题\n\n三级标题的首段正文。');
     const [before, h3, body] = article.blocks;
-    const plan = createPagePlan(article, DEFAULT_CONFIG, {
+    const plan = createPagePlan(article, PAGE_TEST_CONFIG, {
       [before.id]: 1_105,
       [h3.id]: 70,
       [body.id]: 90,
@@ -199,21 +202,21 @@ describe('技术 Markdown 解析', () => {
     expect(plan.pages[1].fragments.map((fragment) => fragment.sourceId)).toEqual([h3.id, body.id]);
   });
 
-  it('允许用户收紧 H2 页尾安全区以减少不必要的换页', () => {
+  it('H2 不做强制聚簇，只有实际内容超出容量时才顺延到下一页', () => {
     const article = parseMarkdown('# 标题\n\n前置正文。\n\n## 二级标题\n\n紧随的正文。');
     const [before, h2, body] = article.blocks;
-    const measurements = { [before.id]: 970, [h2.id]: 90, [body.id]: 100 };
-    const guarded = createPagePlan(article, DEFAULT_CONFIG, measurements);
-    const relaxed = createPagePlan(article, { ...DEFAULT_CONFIG, headingH2TailPercent: 10 }, measurements);
-    expect(guarded.pages).toHaveLength(2);
-    expect(relaxed.pages).toHaveLength(1);
+    const measurements = { [before.id]: 1_000, [h2.id]: 90, [body.id]: 140 };
+    const plan = createPagePlan(article, PAGE_TEST_CONFIG, measurements);
+    expect(plan.pages).toHaveLength(2);
+    expect(plan.pages[0].fragments.map((fragment) => fragment.sourceId)).toEqual([before.id, h2.id]);
+    expect(plan.pages[1].fragments.map((fragment) => fragment.sourceId)).toEqual([body.id]);
   });
 
   it('融合首页的封面高度会占用首张卡片容量，且不会重复到后续页面', () => {
     const article = parseMarkdown('# 标题\n\n第一段正文。\n\n第二段正文。');
     const [first, second] = article.blocks;
     const cover = { id: 'cover', mode: 'integrated' as const, title: '标题', subtitle: '副标题' };
-    const plan = createPagePlan(article, DEFAULT_CONFIG, {
+    const plan = createPagePlan(article, PAGE_TEST_CONFIG, {
       [cover.id]: 260,
       [first.id]: 600,
       [second.id]: 600,

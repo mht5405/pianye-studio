@@ -1,5 +1,6 @@
 # Upstream and attribution
 
+- Pianye project repository: https://github.com/mht5405/pianye-studio
 - Upstream repository: https://github.com/haodongcui/md2card
 - Upstream commit used as the local base: `f672126` (`fix: preserve adjacent Markdown emphasis`)
 - Upstream license: MIT; the original `LICENSE` file is retained.

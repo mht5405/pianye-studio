@@ -5,15 +5,17 @@ export type WorkspaceExportState = {
   message: string;
 };
 
-function UpstreamInfoLink() {
+function ProjectInfoLink() {
   return (
     <a
       class="upstream-info-link"
-      href="../UPSTREAM.md"
-      aria-label="查看上游项目与许可证信息"
-      title="上游项目与许可证信息"
+      href="https://github.com/mht5405/pianye-studio"
+      aria-label="查看篇页 GitHub 项目仓库"
+      title="篇页 GitHub 项目仓库"
+      target="_blank"
+      rel="noreferrer"
     >
-      上游与许可
+      GitHub 项目
     </a>
   );
 }
@@ -69,7 +71,7 @@ export function WorkspaceHeader({
             暗色
           </button>
         </div>
-        <UpstreamInfoLink />
+        <ProjectInfoLink />
         <span class="privacy-note">全部在本地浏览器中完成</span>
         <button
           class="top-export-button"

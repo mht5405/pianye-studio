@@ -2,9 +2,11 @@
 
 调研日期：2026-11-03
 
+> 本文记录选型阶段的调研过程。项目已据此采用 `haodongcui/md2card` 作为 MIT 许可代码基线并完成独立衍生；历史候选比较仍保留原始来源链接，当前功能以代码和根目录 README 为准。
+
 ## 结论
 
-确实已有多个项目覆盖了大部分基础需求，复用能显著减少 Markdown 解析、分页、预览和图片导出的开发量。最值得优先检查的是 [`haodongcui/md2card`](https://github.com/haodongcui/md2card)：它支持本地 Markdown 与图片、自动分页、主题/画布/阅读密度调整、浏览器预览、PNG/ZIP 导出，并采用 MIT 许可。下一步应本地运行并读源码后再决定是否 fork；仅凭 README 不把封面来源/末页来源署名视为已支持功能。
+已有多个项目覆盖了基础需求，复用可减少 Markdown 解析、分页、预览和图片导出的开发量。选型时优先评估了 [`haodongcui/md2card`](https://github.com/haodongcui/md2card)，并基于其 MIT 许可代码建立篇页；封面来源和末页来源署名则作为本项目的扩展功能实现。
 
 ## 候选比较
 
