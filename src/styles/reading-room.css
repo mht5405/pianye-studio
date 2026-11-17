@@ -295,6 +295,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
 :root[data-ui-theme="dark"] .card-theme-option { color: var(--room-ink); border-color: var(--room-line); background: var(--room-sheet); }
 :root[data-ui-theme="dark"] .card-theme-option strong { color: var(--room-ink); }
 :root[data-ui-theme="dark"] .card-theme-option small { color: var(--room-muted); }
+:root[data-ui-theme="dark"] .field-error { color: var(--room-rust-deep); }
 :root[data-ui-theme="dark"] .card-theme-option.selected { border-color: var(--room-rust); background: #392a2c; box-shadow: inset 0 0 0 1px rgba(227,154,115,.2); }
 :root[data-ui-theme="dark"] .card-theme-option.selected:hover { box-shadow: inset 0 0 0 1px rgba(227,154,115,.28); transform: none; }
 :root[data-ui-theme="dark"] .top-export-button, :root[data-ui-theme="dark"] .dialog-submit { color: var(--room-paper); background: var(--room-rust-deep); }
@@ -411,10 +412,9 @@ body, button, input, textarea, select, .card-page { font-family: var(--room-ui);
 .filmstrip-page { border-color: rgba(16,20,46,.13); }
 .filmstrip-page.selected { border-color: var(--room-rust-deep); }
 .filmstrip-page.selected::after { background: var(--room-rust); }
-.card-page .content-block, .card-page .heading, .card-page .card-cover-title,
-.card-page .card-cover-kicker, .card-page .card-footer, .card-page .page-number,
-.card-page .continuation-label, .card-page .markdown-list, .card-page .table-frame,
-.card-page blockquote, .card-page figcaption { font-family: var(--room-ui); }
+:is(.card-page, .measure-stage) :is(.content-block, .heading, .card-cover-title,
+  .card-cover-kicker, .card-footer, .page-number, .continuation-label,
+  .markdown-list, .table-frame, blockquote, figcaption) { font-family: var(--room-ui); }
 .theme-preview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .editor-drop-zone textarea { padding: 19px 21px; font-size: 15px; line-height: 1.88; }
 .editor-hint, .article-name-control small, .field-help, .editor-drop-note { font-size: 13px; }

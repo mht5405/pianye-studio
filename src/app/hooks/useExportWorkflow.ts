@@ -1,5 +1,6 @@
-import { useMemo, useState } from "preact/hooks";
+import { useEffect, useMemo, useState } from "preact/hooks";
 import type { LayoutConfig, PagePlan } from "../../domain/document";
+import { checkExportReadiness } from "../../export/preflight";
 
 export type ExportState = {
   status: "idle" | "running" | "done" | "error";
@@ -32,11 +33,13 @@ function readCardNodes(
 /** Keeps export readiness and PNG archive creation independent from the UI. */
 export function useExportWorkflow({
   pagePlan,
+  layoutReady,
   config,
   filename,
   cardRefs,
 }: {
   pagePlan: PagePlan;
+  layoutReady: boolean;
   config: LayoutConfig;
   filename: string;
   cardRefs: { current: Record<string, HTMLElement | null> };
@@ -60,42 +63,14 @@ export function useExportWorkflow({
   );
 
   const inspectExportReadiness = async () => {
+    if (!layoutReady) return;
     setExportPreflight({
       status: "checking",
       message: "正在检查字体、图片和卡片边界…",
     });
     try {
-      if (exportHasErrors)
-        throw new Error("Markdown 存在解析错误，请先处理页面提示。");
       const cards = readCardNodes(pagePlan, cardRefs);
-      if (!cards.length) throw new Error("卡片仍在生成，请稍后重试。");
-      if ("fonts" in document) await document.fonts.ready;
-      await Promise.all(
-        cards.flatMap((card) =>
-          Array.from(card.querySelectorAll("img")).map(async (image) => {
-            if (!image.complete) {
-              await new Promise<void>((resolve, reject) => {
-                image.addEventListener("load", () => resolve(), { once: true });
-                image.addEventListener(
-                  "error",
-                  () => reject(new Error("有图片无法加载。")),
-                  { once: true },
-                );
-              });
-            }
-            await image.decode().catch(() => {
-              throw new Error("有图片无法解码。");
-            });
-          }),
-        ),
-      );
-      if (
-        cards.some((card) => {
-          const content = card.querySelector<HTMLElement>(".card-content");
-          return Boolean(content && content.scrollHeight > content.clientHeight + 1);
-        })
-      )
-        throw new Error("检测到卡片内容溢出，请调整排版后重试。");
+      await checkExportReadiness(cards, pagePlan.diagnostics);
       setExportPreflight({
         status: "ready",
         message: "字体、图片与卡片边界检查通过。",
@@ -109,14 +84,19 @@ export function useExportWorkflow({
     }
   };
 
+  useEffect(() => {
+    if (exportDialogOpen && layoutReady) void inspectExportReadiness();
+  }, [exportDialogOpen, layoutReady, pagePlan]);
+
   const openExportDialog = () => {
     if (exportState.status !== "running")
       setExportState({ status: "idle", message: "" });
+    setExportPreflight({ status: "checking", message: "正在检查字体、图片和卡片边界…" });
     setExportDialogOpen(true);
-    void inspectExportReadiness();
   };
 
   const handleExport = async () => {
+    if (!layoutReady) return;
     const cards = readCardNodes(pagePlan, cardRefs);
     try {
       setExportState({
@@ -154,7 +134,7 @@ export function useExportWorkflow({
     diagnosticWarningCount,
     exportDialogOpen,
     exportHasErrors,
-    exportPreflight,
+    exportPreflight: layoutReady ? exportPreflight : { status: "checking" as const, message: "正在测量分页…" },
     exportState,
     handleExport,
     inspectExportReadiness,

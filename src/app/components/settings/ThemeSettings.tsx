@@ -1,4 +1,11 @@
-import type { LayoutConfig } from "../../../domain/document";
+import { CARD_THEME_IDS, type CardTheme, type LayoutConfig } from "../../../domain/document";
+
+const THEME_LABELS: Record<CardTheme, { name: string; hint: string }> = {
+  minimal: { name: "纯净排版", hint: "白底 · 正式" },
+  "classic-dark": { name: "暗色长文", hint: "近黑横纹 · 金色标题" },
+  elsewhere: { name: "蓝灰长文", hint: "蓝灰底 · 暖灰字" },
+  "warm-gray": { name: "暖灰长文", hint: "暖灰底 · 柔金标题" },
+};
 
 type UpdateConfig = <Key extends keyof LayoutConfig>(
   key: Key,
@@ -16,25 +23,20 @@ export function ThemeSettings({
     <section class="settings-category-content">
       <h3>主题</h3>
       <p class="field-help">
-        主题会同时调整卡片的配色、标题、表格、图注与背景纹理；网页浅色或深色外观不会改变导出结果。
+        主题决定卡片的配色、标题、表格与图注样式，适用于预览和导出。
       </p>
       <div class="card-theme-grid">
-        {(
-          [
-            { id: "minimal", name: "纯净排版", hint: "白底 · 正式" },
-            { id: "elsewhere", name: "暗色长文", hint: "炭黑 · 暖白字" },
-          ] as const
-        ).map((theme) => (
+        {CARD_THEME_IDS.map((id) => (
           <button
-            key={theme.id}
+            key={id}
             type="button"
-            class={`card-theme-option theme-${theme.id}${config.cardTheme === theme.id ? " selected" : ""}`}
-            aria-pressed={config.cardTheme === theme.id}
-            onClick={() => onConfigChange("cardTheme", theme.id)}
+            class={`card-theme-option theme-${id}${config.cardTheme === id ? " selected" : ""}`}
+            aria-pressed={config.cardTheme === id}
+            onClick={() => onConfigChange("cardTheme", id)}
           >
             <span class="card-theme-swatch" />
-            <strong>{theme.name}</strong>
-            <small>{theme.hint}</small>
+            <strong>{THEME_LABELS[id].name}</strong>
+            <small>{THEME_LABELS[id].hint}</small>
           </button>
         ))}
       </div>

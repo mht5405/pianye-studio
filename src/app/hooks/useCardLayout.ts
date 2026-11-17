@@ -1,11 +1,8 @@
 import { useCallback, useMemo, useState } from "preact/hooks";
-import type { LayoutConfig, PageCover } from "../../domain/document";
+import type { LayoutConfig, PagePlan } from "../../domain/document";
 import { createPagePlan } from "../../layout/paginate";
 import { parseMarkdown } from "../../parser/parse-markdown";
-
-function filenameStem(filename: string): string {
-  return filename.replace(/\.[^./\\]+$/, "").trim();
-}
+import { checkCoverCredit, createCardCover, inferArticleTitle } from "../../renderer/article-card";
 
 /** Keeps parsing, hidden measurement, and visible pagination on one plan. */
 export function useCardLayout({
@@ -19,65 +16,37 @@ export function useCardLayout({
   titleOverride: string;
   sourceFileName: string;
 }) {
-  const [measurements, setMeasurements] = useState<Record<string, number>>({});
+  const [revision, setRevision] = useState(0);
   const article = useMemo(() => {
     const parsed = parseMarkdown(markdown, { coverSource: config.coverSource, coverSourceUrl: config.coverSourceUrl });
-    if (config.coverMode !== "none" && config.coverImageDataUrl && !parsed.metadata?.coverSource) {
-      parsed.diagnostics.push({ level: 'error', message: '已设置封面图片，但缺少 cover_source；请补充图片来源后才能导出。' });
-    }
+    checkCoverCredit(parsed, config);
     return parsed;
   }, [config.coverImageDataUrl, config.coverMode, config.coverSource, config.coverSourceUrl, markdown]);
-  const inferredTitle =
-    article.title.trim() || filenameStem(sourceFileName) || "未命名笔记";
+  const inferredTitle = inferArticleTitle(article, sourceFileName);
   const articleName = titleOverride.trim() || inferredTitle;
   const titleSource = article.title.trim()
     ? article.metadata?.title ? "Markdown front matter" : "Markdown 首个 H1"
     : sourceFileName
       ? "导入文件名"
       : "默认名称";
-  const cover = useMemo<PageCover | undefined>(
-    () =>
-      config.coverMode === "none"
-        ? undefined
-        : {
-            id: "md2card-cover",
-            mode: config.coverMode,
-            title: articleName,
-            kicker: config.coverKicker.trim(),
-            subtitle: config.coverSubtitle.trim(),
-            imageDataUrl: config.coverImageDataUrl,
-            imagePositionY: config.coverImagePositionY,
-            authorName: config.authorName,
-            authorAvatarDataUrl: config.authorAvatarDataUrl,
-            showAuthor: config.showAuthorOnCover,
-          },
-    [articleName, config.authorAvatarDataUrl, config.authorName, config.coverImageDataUrl, config.coverImagePositionY, config.coverKicker, config.coverMode, config.coverSubtitle, config.showAuthorOnCover],
-  );
-  const pagePlan = useMemo(
-    () => createPagePlan(article, config, measurements, cover),
-    [article, config, measurements, cover],
-  );
-  const acceptMeasure = useCallback((next: Record<string, number>) => {
-    setMeasurements((previous) => {
-      const previousKeys = Object.keys(previous);
-      const nextKeys = Object.keys(next);
-      if (
-        previousKeys.length === nextKeys.length &&
-        nextKeys.every((key) => Math.abs((previous[key] ?? 0) - next[key]) < 1)
-      )
-        return previous;
-      return next;
-    });
-  }, []);
-  const invalidateLayout = useCallback(() => setMeasurements({}), []);
+  const cover = useMemo(() => createCardCover(articleName, config), [articleName, config]);
+  const layout = useMemo(() => ({ revision, article, config, cover }), [revision, article, config, cover]);
+  const [measured, setMeasured] = useState<{ layout: typeof layout; plan: PagePlan }>();
+  const layoutReady = measured?.layout === layout;
+  const pagePlan = useMemo(() => {
+    return measured?.layout === layout ? measured.plan : createPagePlan(article, config, {}, cover);
+  }, [measured, layout, article, config, cover]);
+  const acceptPlan = useCallback((plan: PagePlan) => setMeasured({ layout, plan }), [layout]);
+  const invalidateLayout = useCallback(() => setRevision((previous) => previous + 1), []);
 
   return {
-    acceptMeasure,
+    acceptPlan,
     article,
     articleName,
     cover,
     inferredTitle,
     invalidateLayout,
+    layoutReady,
     pagePlan,
     titleSource,
   };

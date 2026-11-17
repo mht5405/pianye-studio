@@ -2,9 +2,10 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { DEFAULT_CONFIG, DENSITY_PRESETS } from '../../src/domain/document';
-import { STARTER_MARKDOWN } from '../../src/data/starter-markdown';
+import { migrateStarterMarkdown, STARTER_MARKDOWN } from '../../src/data/starter-markdown';
 import { createPagePlan } from '../../src/layout/paginate';
-import { parseMarkdown } from '../../src/parser/parse-markdown';
+import { inlineText, parseMarkdown } from '../../src/parser/parse-markdown';
+import type { MeasureParagraph } from '../../src/layout/split-paragraph';
 import {
   articleImageUrls,
   buildImageResourceIndex,
@@ -88,24 +89,33 @@ describe('技术 Markdown 解析', () => {
     expect(article.blocks[1]).toMatchObject({ kind: 'table', caption: '表 1：变量对照。' });
   });
 
-  it('项目自带完整样例覆盖图片、公式、表格、代码和显式分页', () => {
+  it('项目自带完整样例可以连续排版图片、公式、表格和代码', () => {
     const article = parseMarkdown(completeExample);
     expect(article.title).toBe('篇页示例');
     expect(article.blocks.filter((block) => block.kind === 'image')).toHaveLength(3);
     expect(article.blocks.some((block) => block.kind === 'math')).toBe(true);
     expect(article.blocks.some((block) => block.kind === 'table')).toBe(true);
     expect(article.blocks.some((block) => block.kind === 'code')).toBe(true);
-    expect(article.blocks.some((block) => block.kind === 'pageBreak')).toBe(true);
+    expect(article.blocks.some((block) => block.kind === 'pageBreak')).toBe(false);
   });
 
   it('首次打开的内置演示稿无需图片权限且可展示多页技术内容', () => {
     const article = parseMarkdown(STARTER_MARKDOWN);
     expect(article.title).toContain('篇页');
     expect(article.blocks.some((block) => block.kind === 'image')).toBe(false);
-    expect(article.blocks.filter((block) => block.kind === 'pageBreak')).toHaveLength(4);
+    expect(article.blocks.some((block) => block.kind === 'pageBreak')).toBe(false);
     expect(article.blocks.some((block) => block.kind === 'math')).toBe(true);
     expect(article.blocks.some((block) => block.kind === 'table')).toBe(true);
     expect(article.blocks.some((block) => block.kind === 'code')).toBe(true);
+  });
+
+  it('恢复旧版开箱演示稿时移除预置分页，并保留用户编辑过的 Markdown', () => {
+    const legacy = STARTER_MARKDOWN.replace(/^## 0[2-5] · /gm, '<!-- md2card:break -->\n\n$&');
+    const older = legacy.replace('3:5 长图文 + 蓝灰长文主题 + 独立封面', '3:5 长图文 + 暗色长文主题 + 独立封面');
+    expect(migrateStarterMarkdown(legacy)).toBe(STARTER_MARKDOWN);
+    expect(migrateStarterMarkdown(older)).toBe(STARTER_MARKDOWN);
+    const edited = `${legacy}\n我的补充。\n`;
+    expect(migrateStarterMarkdown(edited)).toBe(edited);
   });
 
   it('将超高表格按行续页，并在续页中重复表头', () => {
@@ -210,6 +220,47 @@ describe('技术 Markdown 解析', () => {
     expect(plan.pages).toHaveLength(2);
     expect(plan.pages[0].fragments.map((fragment) => fragment.sourceId)).toEqual([before.id, h2.id]);
     expect(plan.pages[1].fragments.map((fragment) => fragment.sourceId)).toEqual([body.id]);
+  });
+
+  const measureProse: MeasureParagraph = ({ children }) => (
+    Math.ceil(inlineText(children).length / 20) * PAGE_TEST_CONFIG.bodyFontSize * PAGE_TEST_CONFIG.bodyLineHeight
+  );
+
+  it('在二级标题后填入能放下的正文，并保留续页中的行内格式与手动分页', () => {
+    const markdown = '这句话包含**连续阅读**与[参考链接](https://example.com)，用于检查续页。'.repeat(12);
+    const article = parseMarkdown(`# 标题\n\n前置正文。\n\n## 二级标题\n\n${markdown}\n\n<!-- md2card:break -->\n\n指定新页。`);
+    const [before, h2, body, , last] = article.blocks;
+    if (body.kind !== 'paragraph') throw new Error('测试前提：第三块应为段落');
+    const plan = createPagePlan(article, PAGE_TEST_CONFIG, {
+      [before.id]: 780,
+      [h2.id]: 70,
+      [body.id]: measureProse(body),
+    }, undefined, measureProse);
+
+    expect(plan.pages[0].fragments.map((fragment) => fragment.sourceId)).toEqual([before.id, h2.id, body.id]);
+    const parts = plan.pages.flatMap((page) => page.fragments)
+      .filter((fragment) => fragment.sourceId === body.id)
+      .map((fragment) => fragment.block);
+    expect(parts.length).toBeGreaterThan(1);
+    const inlines = parts.flatMap((part) => part.kind === 'paragraph' ? part.children : []);
+    expect(inlineText(inlines)).toBe(inlineText(body.children));
+    expect(inlines.filter((inline) => inline.kind === 'strong').length).toBeGreaterThanOrEqual(12);
+    const links = inlines.filter((inline) => inline.kind === 'link');
+    expect(links.length).toBeGreaterThanOrEqual(12);
+    expect(links.every((link) => link.url === 'https://example.com')).toBe(true);
+    expect(plan.pages.at(-1)?.fragments.map((fragment) => fragment.sourceId)).toEqual([last.id]);
+  });
+
+  it('在页尾放不下两行正文时将二级标题和正文一起移到下一页', () => {
+    const article = parseMarkdown(`# 标题\n\n前置正文。\n\n## 二级标题\n\n${'这一段应当跟在标题后方。'.repeat(12)}`);
+    const [before, h2, body] = article.blocks;
+    if (body.kind !== 'paragraph') throw new Error('测试前提：第三块应为段落');
+    const plan = createPagePlan(article, PAGE_TEST_CONFIG, {
+      [before.id]: 970,
+      [h2.id]: 90,
+      [body.id]: measureProse(body),
+    }, undefined, measureProse);
+    expect(plan.pages.map((page) => page.fragments.map((fragment) => fragment.sourceId))).toEqual([[before.id], [h2.id, body.id]]);
   });
 
   it('融合首页的封面高度会占用首张卡片容量，且不会重复到后续页面', () => {

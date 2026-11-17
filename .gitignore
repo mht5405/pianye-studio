@@ -1,6 +1,7 @@
 node_modules/
 dist/
 output/
+/pianye-preferences.json
 coverage/
 playwright-report/
 test-results/

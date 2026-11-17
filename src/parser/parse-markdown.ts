@@ -100,6 +100,7 @@ function splitFrontMatter(markdown: string): { body: string; title: string; meta
     const value = unquote(rawValue);
     listKey = key === 'references' && !value ? key : '';
     if (key === 'title') metadata.title = value;
+    if (key === 'cover') metadata.coverImage = value;
     if (key === 'cover_source') metadata.coverSource = value;
     if (key === 'cover_source_url') metadata.coverSourceUrl = value;
     if (key === 'cover_license') metadata.coverLicense = value;

@@ -1,5 +1,6 @@
 const FENCE = '```';
 const TICK = '`';
+const LEGACY_PAGE_BREAK = '<!-- md2card:break -->\n\n';
 
 /**
  * The first-run article must work without requesting file access. It is
@@ -7,7 +8,7 @@ const TICK = '`';
  * integration example, while this article demonstrates the rest of the card
  * system in a few immediately readable pages.
  */
-export const STARTER_MARKDOWN = String.raw`# 篇页：把 Markdown 编排成分享图文
+const LEGACY_STARTER_MARKDOWN = String.raw`# 篇页：把 Markdown 编排成分享图文
 
 > **纯前端、本地处理、预览即导出。** 这是一篇首次打开工作台就能完整阅读的产品演示：不需要上传文件，也不需要先授予图片目录权限。
 
@@ -15,7 +16,7 @@ export const STARTER_MARKDOWN = String.raw`# 篇页：把 Markdown 编排成分�
 
 ## 01 · 从一篇 Markdown 开始
 
-你可以直接替换左侧内容、粘贴自己的笔记，或导入单篇 ${TICK}.md${TICK} 文件。默认的 **3:5 长图文 + 暗色长文主题 + 独立封面** 对应本项目的图文样式；在“画布”设置中可以替换封面图片。
+你可以直接替换左侧内容、粘贴自己的笔记，或导入单篇 ${TICK}.md${TICK} 文件。默认的 **3:5 长图文 + 蓝灰长文主题 + 独立封面** 对应本项目的图文样式；在“画布”设置中可以替换封面图片。
 
 1. 输入或导入 Markdown；
 2. 先检查右侧自动分页；
@@ -98,3 +99,14 @@ ${FENCE}
 
 最后，试试切换画布比例、主题和密度。只有当自己的笔记出现长公式、宽表格或特殊封面需求时，才需要继续展开细项设置。所有文字、图片、排版和导出文件都留在当前浏览器中。
 `;
+
+// The previous demo forced its chapters onto separate cards, even when a
+// section had just spilled a few lines onto a nearly empty card.
+export const STARTER_MARKDOWN = LEGACY_STARTER_MARKDOWN.replaceAll(LEGACY_PAGE_BREAK, '');
+
+export function migrateStarterMarkdown(markdown: string): string {
+  const saved = markdown.replace(/\r\n/g, '\n').trimEnd();
+  const legacy = LEGACY_STARTER_MARKDOWN.trimEnd();
+  const older = legacy.replace('3:5 长图文 + 蓝灰长文主题 + 独立封面', '3:5 长图文 + 暗色长文主题 + 独立封面');
+  return saved === legacy || saved === older ? STARTER_MARKDOWN : markdown;
+}

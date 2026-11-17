@@ -19,7 +19,14 @@
   background-size: 7px 7px;
 }
 
-.card-theme-option.theme-elsewhere .card-theme-swatch {
-  background-color: #141414;
-  background-image: radial-gradient(circle at 75% 18%, rgba(237, 170, 51, .34), transparent 35%), repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 3px);
+.card-theme-option.theme-classic-dark { --swatch-heading: var(--theme-primary); }
+
+.card-theme-option:is(.theme-elsewhere, .theme-warm-gray, .theme-classic-dark) .card-theme-swatch {
+  background:
+    linear-gradient(var(--swatch-heading, var(--longform-heading)) 0 0) 13px 16px / 36% 4px no-repeat,
+    linear-gradient(var(--theme-on-surface) 0 0) 13px 32px / 70% 2px no-repeat,
+    linear-gradient(var(--theme-on-surface) 0 0) 13px 42px / 56% 2px no-repeat,
+    linear-gradient(var(--theme-primary) 0 0) 13px 54px / 20% 2px no-repeat,
+    var(--theme-surface);
+  box-shadow: none;
 }

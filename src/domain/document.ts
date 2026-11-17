@@ -35,6 +35,7 @@ export interface ArticleDocument {
 
 export interface ArticleMetadata {
   title?: string;
+  coverImage?: string;
   coverSource?: string;
   coverSourceUrl?: string;
   coverLicense?: string;
@@ -44,7 +45,8 @@ export interface ArticleMetadata {
 
 export type Density = 'relaxed' | 'balanced' | 'compact' | 'custom';
 export type CanvasRatio = '3:4' | '2:3' | '3:5';
-export type CardTheme = 'minimal' | 'elsewhere';
+export const CARD_THEME_IDS = ['minimal', 'classic-dark', 'elsewhere', 'warm-gray'] as const;
+export type CardTheme = (typeof CARD_THEME_IDS)[number];
 export type CodeBlockAppearance = 'theme' | 'macos';
 export type CoverMode = 'none' | 'integrated' | 'standalone';
 

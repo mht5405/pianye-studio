@@ -16,6 +16,7 @@ export interface ImageResolution {
 }
 
 export interface ImageResourceIndex {
+  resolvedUrls?: ReadonlyMap<string, string>;
   sources: Record<string, string>;
   sourceImageIds: Record<string, string>;
   candidateImageIds: Record<string, string[]>;
@@ -130,6 +131,8 @@ export function resolveImageReference(
   url: string,
   index: ImageResourceIndex,
 ): ImageResolution {
+  const preloaded = index.resolvedUrls?.get(url);
+  if (preloaded) return { state: 'matched', source: preloaded };
   if (isRemoteImageUrl(url)) return { state: 'remote', source: url };
   const aliases = pathAliases(url);
   const override = index.overrides[normalizeImagePath(url)];

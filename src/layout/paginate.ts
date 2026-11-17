@@ -1,6 +1,7 @@
 import type { ArticleDocument, Block, Diagnostic, LayoutConfig, PageCover, PageFragment, PagePlan, PagePlanPage } from '../domain/document';
 import { canvasHeight, cardBottomPadding } from '../domain/card-metrics';
 import { inlineText } from '../parser/parse-markdown';
+import { splitParagraph, type MeasureParagraph, type Paragraph } from './split-paragraph';
 
 const CONTENT_SAFETY_BUFFER = 53;
 const PAGE_NUMBER_HEIGHT = 35;
@@ -62,25 +63,8 @@ function cloneBlock(block: Block, id: string): Block {
   return { ...block, id } as Block;
 }
 
-function splitText(text: string, maxCharacters: number): string[] {
-  if (text.length <= maxCharacters) return [text];
-  const segments = text.split(/(?<=[。！？；;.!?])\s*|(?<=，|、|：|,|:)\s*/).filter(Boolean);
-  const chunks: string[] = [];
-  let current = '';
-  for (const segment of segments) {
-    if (current && current.length + segment.length > maxCharacters) {
-      chunks.push(current);
-      current = segment;
-    } else {
-      current += segment;
-    }
-  }
-  if (current) chunks.push(current);
-  if (chunks.length > 1) return chunks;
-
-  const hardChunks: string[] = [];
-  for (let start = 0; start < text.length; start += maxCharacters) hardChunks.push(text.slice(start, start + maxCharacters));
-  return hardChunks;
+function isFlowingParagraph(block: Block): block is Paragraph {
+  return block.kind === 'paragraph' && !block.id.startsWith('generated-source-');
 }
 
 function splitOversizeBlock(
@@ -89,7 +73,7 @@ function splitOversizeBlock(
   available: number,
   diagnostics: Diagnostic[],
 ): PageFragment[] {
-  if (blockHeight <= available || block.kind === 'heading' || block.kind === 'pageBreak') {
+  if (blockHeight <= available || block.kind === 'heading' || block.kind === 'pageBreak' || isFlowingParagraph(block)) {
     return [{ id: block.id, sourceId: block.id, block }];
   }
 
@@ -121,27 +105,6 @@ function splitOversizeBlock(
         continuation: total > 1 ? { index: index + 1, total, label: `表格续 ${index + 1}/${total}` } : undefined,
       };
     });
-  }
-
-  if (block.kind === 'paragraph') {
-    const text = inlineText(block.children);
-    const parts = splitText(text, Math.max(100, Math.floor((text.length * available) / blockHeight)));
-    if (parts.length > 1) {
-      diagnostics.push({
-        level: 'warning',
-        message: '超长段落已按句子续页；续页中的复杂行内样式会降级为正文文本。',
-        blockId: block.id,
-      });
-      return parts.map((part, index) => {
-        const fragment = cloneBlock({ id: `${block.id}-paragraph-${index}`, kind: 'paragraph', children: [{ kind: 'text', value: part }] }, `${block.id}-paragraph-${index}`);
-        return {
-          id: fragment.id,
-          sourceId: block.id,
-          block: fragment,
-          continuation: { index: index + 1, total: parts.length, label: `正文续 ${index + 1}/${parts.length}` },
-        };
-      });
-    }
   }
 
   diagnostics.push({
@@ -209,6 +172,7 @@ function headingClusterHeight(
   config: LayoutConfig,
   measurements: Record<string, number>,
   capacity: number,
+  paragraphLeadHeight?: number,
 ): number {
   const heading = fragments[headingIndex];
   if (heading.block.kind !== 'heading') return 0;
@@ -218,7 +182,13 @@ function headingClusterHeight(
   const firstIndex = nextMeaningfulIndex(fragments, headingIndex + 1);
   if (firstIndex === undefined) return reserved;
 
-  const include = (index: number) => { reserved += beforeSpacingFor(fragments[index].block, config) + heightAt(index); };
+  const include = (index: number) => {
+    const block = fragments[index].block;
+    const height = heightAt(index);
+    reserved += beforeSpacingFor(block, config) + (isFlowingParagraph(block) && paragraphLeadHeight !== undefined
+      ? Math.min(height, paragraphLeadHeight)
+      : height);
+  };
   include(firstIndex);
   const first = fragments[firstIndex];
   const firstIsSubheading = first.block.kind === 'heading' && first.block.depth > heading.block.depth;
@@ -252,12 +222,14 @@ export function createPagePlan(
   config: LayoutConfig,
   measurements: Record<string, number>,
   cover?: PageCover,
+  measureParagraph?: MeasureParagraph,
 ): PagePlan {
   const diagnostics: Diagnostic[] = [...article.diagnostics];
   // Density changes rendered block heights, not the physical height of a
   // 1080px card. Applying its fallback factor here would overfill relaxed
   // cards after DOM measurement has produced the real block sizes.
   const capacity = contentCapacity(config);
+  const lineHeight = config.bodyFontSize * config.bodyLineHeight;
   const expanded = article.blocks.flatMap((block) =>
     splitOversizeBlock(block, measuredHeight(block, config, measurements), capacity * 0.92, diagnostics),
   );
@@ -270,6 +242,19 @@ export function createPagePlan(
   let currentCover = cover?.mode === 'integrated' ? cover : undefined;
   let used = currentCover ? (measurements[currentCover.id] ?? fallbackCoverHeight(currentCover, config)) : 0;
   let section = '';
+  let paragraphPart = 0;
+  const paragraphHeights = new Map<string, number>();
+
+  const heightOf = (fragment: PageFragment) => paragraphHeights.get(fragment.id) ?? fragmentHeight(fragment, config, measurements);
+  const paragraphFragment = (fragment: PageFragment, paragraph: Paragraph, height: number): PageFragment => {
+    const id = `${fragment.sourceId}-flow-${paragraphPart++}`;
+    paragraphHeights.set(id, height);
+    return { ...fragment, id, block: paragraph };
+  };
+  const append = (fragment: PageFragment, height: number, beforeSpacing: number) => {
+    current.push(beforeSpacing ? { ...fragment, beforeSpacing } : fragment);
+    used += beforeSpacing + height;
+  };
 
   const flush = () => {
     if (!current.length && !currentCover) return;
@@ -286,9 +271,7 @@ export function createPagePlan(
       flush();
       continue;
     }
-    if (block.kind === 'heading' && block.depth <= 2) section = inlineText(block.children);
-
-    const height = fragmentHeight(fragment, config, measurements);
+    const height = heightOf(fragment);
     const pageHasContent = current.length > 0 || Boolean(currentCover);
     let beforeSpacing = current.length ? beforeSpacingFor(block, config) : 0;
     if (block.kind === 'heading') {
@@ -297,8 +280,17 @@ export function createPagePlan(
       if (block.depth <= 1 && pageHasContent) {
         flush();
         beforeSpacing = 0;
-      } else if (pageHasContent && block.depth !== 2) {
-        const cluster = headingClusterHeight(expanded, index, config, measurements, capacity);
+      } else if (pageHasContent && block.depth === 2 && measureParagraph) {
+        const next = expanded[index + 1];
+        if (next && isFlowingParagraph(next.block)) {
+          const roomAfterHeading = capacity - used - beforeSpacing - height - beforeSpacingFor(next.block, config);
+          if (heightOf(next) > roomAfterHeading && !splitParagraph(next.block, roomAfterHeading, lineHeight, measureParagraph, false)) {
+            flush();
+            beforeSpacing = 0;
+          }
+        }
+      } else if (pageHasContent && block.depth > 2) {
+        const cluster = headingClusterHeight(expanded, index, config, measurements, capacity, measureParagraph ? 2 * lineHeight : undefined);
         const tailGuard = capacity * (headingTailPercent(block.depth, config) / 100);
         // The setting describes the zone where the heading itself must not
         // begin. Reserve its rendered height in addition to the tail zone;
@@ -312,12 +304,24 @@ export function createPagePlan(
       }
     }
 
-    if (pageHasContent && used + beforeSpacing + height > capacity) {
+    if (isFlowingParagraph(block) && measureParagraph && used + beforeSpacing + height > capacity) {
+      const split = splitParagraph(block, capacity - used - beforeSpacing, lineHeight, measureParagraph, !pageHasContent);
+      if (split) {
+        append(paragraphFragment(fragment, split.head, split.headHeight), split.headHeight, beforeSpacing);
+        expanded[index] = paragraphFragment(fragment, split.tail, split.tailHeight);
+      }
+      if (split || pageHasContent) {
+        flush();
+        index -= 1; // Retry the remaining text at the top of the new card.
+        continue;
+      }
+    }
+    if ((current.length || currentCover) && used + beforeSpacing + height > capacity) {
       flush();
       beforeSpacing = 0;
     }
-    current.push(beforeSpacing ? { ...fragment, beforeSpacing } : fragment);
-    used += beforeSpacing + height;
+    if (block.kind === 'heading' && block.depth <= 2) section = inlineText(block.children);
+    append(fragment, height, beforeSpacing);
 
     if (height > capacity) {
       diagnostics.push({ level: 'warning', message: '该页面包含无法进一步安全拆分的超高内容，请检查公式或资源。', blockId: block.id });

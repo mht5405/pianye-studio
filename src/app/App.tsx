@@ -4,8 +4,9 @@ import {
   useState,
 } from "preact/hooks";
 import type { LayoutConfig } from "../domain/document";
-import { DEFAULT_CONFIG, DENSITY_PRESETS } from "../domain/document";
-import { STARTER_MARKDOWN } from "../data/starter-markdown";
+import { downloadPreferences } from "../automation/preferences";
+import { CARD_THEME_IDS, DEFAULT_CONFIG, DENSITY_PRESETS } from "../domain/document";
+import { migrateStarterMarkdown, STARTER_MARKDOWN } from "../data/starter-markdown";
 import { MeasureStage } from "../renderer/MeasureStage";
 import {
   MobileWorkspaceTabs,
@@ -19,6 +20,7 @@ import { MarkdownAssetDialog } from "./components/MarkdownAssetDialog";
 import { PreviewPane } from "./components/PreviewPane";
 import { useDraftPersistence } from "./hooks/useDraftPersistence";
 import { useCardLayout } from "./hooks/useCardLayout";
+import { useCoverImage } from "./hooks/useCoverImage";
 import { useExportWorkflow } from "./hooks/useExportWorkflow";
 import { useImageResources } from "./hooks/useImageResources";
 import { usePreviewWorkspace } from "./hooks/usePreviewWorkspace";
@@ -34,9 +36,8 @@ import { ThemeSettings } from "./components/settings/ThemeSettings";
 import { WorkspaceHeader } from "./components/WorkspaceHeader";
 
 function normalizeCardTheme(value: unknown): LayoutConfig["cardTheme"] {
-  if (value === "minimal" || value === "elsewhere") return value;
   if (value === "paper" || value === "ink" || value === "mono") return "minimal";
-  return DEFAULT_CONFIG.cardTheme;
+  return CARD_THEME_IDS.find((theme) => theme === value) ?? DEFAULT_CONFIG.cardTheme;
 }
 
 function normalizeCodeBlockAppearance(
@@ -75,14 +76,23 @@ export function App() {
     useState<SettingsCategory>("theme");
   const { uiTheme, setUiTheme } = useUiTheme();
   const cardRefs = useRef<Record<string, HTMLElement | null>>({});
+  const { coverImageStatus, importCoverImage, resetCoverImageImport } = useCoverImage((coverImageDataUrl) => {
+    setConfig((previous) => ({
+      ...previous,
+      coverImageDataUrl,
+      coverImagePositionY: 50,
+      coverMode: "standalone",
+    }));
+  });
 
   const {
-    acceptMeasure,
+    acceptPlan,
     article,
     articleName,
     cover,
     inferredTitle,
     invalidateLayout,
+    layoutReady,
     pagePlan,
     titleSource,
   } = useCardLayout({
@@ -117,6 +127,7 @@ export function App() {
     setExportState,
   } = useExportWorkflow({
     pagePlan,
+    layoutReady,
     config,
     filename: articleName,
     cardRefs,
@@ -185,7 +196,7 @@ export function App() {
     },
     onRestore: (draft) => {
       if (!draft?.markdown) return;
-      setMarkdown(draft.markdown);
+      setMarkdown(draft.sourceFileName ? draft.markdown : migrateStarterMarkdown(draft.markdown));
       setConfig({
         ...DEFAULT_CONFIG,
         ...(draft.config ?? {}),
@@ -208,7 +219,13 @@ export function App() {
     key: Key,
     value: LayoutConfig[Key],
   ) => {
+    if (key === "coverMode" && value === "none") resetCoverImageImport();
     setConfig((previous) => ({ ...previous, [key]: value }));
+  };
+
+  const clearCoverImage = () => {
+    resetCoverImageImport();
+    setConfig((previous) => ({ ...previous, coverImageDataUrl: "", coverImagePositionY: 50 }));
   };
 
   const updateReadingConfig = <Key extends ReadingSetting>(
@@ -239,7 +256,7 @@ export function App() {
     }
     const nextMarkdown = await file.text();
     setMarkdown(nextMarkdown);
-    setConfig((previous) => ({ ...previous, coverImageDataUrl: "" }));
+    clearCoverImage();
     setSourceFileName(file.name);
     setTitleOverride("");
     invalidateLayout();
@@ -267,7 +284,7 @@ export function App() {
     setMarkdown("");
     setTitleOverride("");
     setSourceFileName("");
-    setConfig((previous) => ({ ...previous, coverImageDataUrl: "" }));
+    clearCoverImage();
     invalidateLayout();
     clearArticleResources();
   };
@@ -357,6 +374,14 @@ export function App() {
                 <span class="eyebrow">排版</span>
                 <h2>阅读设置</h2>
               </div>
+              <button
+                class="secondary-button settings-preferences-button"
+                type="button"
+                title="导出当前主题、画布、署名和排版设置，供 Agent 出图时复用"
+                onClick={() => downloadPreferences(config)}
+              >
+                导出 Agent 偏好
+              </button>
             </div>
             <SettingsCategoryNav
               activeCategory={activeSettingsCategory}
@@ -380,6 +405,9 @@ export function App() {
               <CanvasSettings
                 config={config}
                 articleName={articleName}
+                coverImageStatus={coverImageStatus}
+                onImportCoverImage={importCoverImage}
+                onClearCoverImage={clearCoverImage}
                 onConfigChange={updateConfig}
                 onEditArticle={() => {
                   setActivePane("editor");
@@ -426,7 +454,7 @@ export function App() {
         config={config}
         cover={cover}
         resources={resources}
-        onMeasure={acceptMeasure}
+        onPlan={acceptPlan}
       />
       {imageManagerOpen && (
         <ImageManagerDialog

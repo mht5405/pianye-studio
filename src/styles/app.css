@@ -84,6 +84,7 @@ legend { margin-bottom: 10px; color: #514c46; font-size: 12px; font-weight: 750;
 .density-choices { display: grid; gap: 6px; }
 .density-choices button { text-align: left; padding-left: 10px; }
 .secondary-button { width: 100%; min-height: 32px; margin-top: 12px; border: 1px solid #ded8d0; border-radius: 8px; color: #655e57; background: #fffefa; font-size: 11px; font-weight: 650; }
+.secondary-button.settings-preferences-button { width: auto; margin: 0; padding: 0 10px; white-space: nowrap; }
 .range-label { display: grid; grid-template-columns: 1fr auto; row-gap: 6px; margin: 0; padding: 10px 11px; border: 1px solid #e3ddd5; border-radius: 10px; color: #625c55; background: #fffefa; font-size: 11px; }
 .range-label output { color: #a04e41; font-weight: 700; }
 .range-label input { grid-column: 1 / -1; width: 100%; accent-color: #df4d3f; }
@@ -245,7 +246,8 @@ hr { width: 36%; height: 2px; margin: 8px auto; border: 0; background: #d6c9ba; 
 .text-field input::placeholder { color: #aaa298; }
 .cover-image-picker { margin-top: 12px; }
 .cover-image-picker input[type="file"] { height: auto; padding: 6px; background: #fffefa; }
-.cover-image-picker small { color: #81796f; font-size: 10px; font-weight: 500; }
+.cover-image-link-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px; }
+.cover-image-link-row .secondary-button { width: auto; margin: 0; padding: 0 10px; }
 .clear-cover-image { margin-top: 8px; padding: 5px 8px; border: 1px solid #ded8d0; border-radius: 7px; color: #625c55; background: #fffefa; font-size: 11px; }
 .field-error { margin: 7px 0 0; color: #a44235; font-size: 11px; }
 

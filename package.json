@@ -7,6 +7,7 @@
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 0.0.0.0",
+    "cards:render": "node scripts/render-cards.mjs",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -26,6 +27,7 @@
   "devDependencies": {
     "@types/node": "^22.15.30",
     "@types/prismjs": "^1.26.3",
+    "playwright-core": "^1.65.1",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
     "vitest": "^3.2.4"
