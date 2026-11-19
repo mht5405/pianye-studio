@@ -433,8 +433,6 @@
 
 .card-page .card-cover.has-cover-image,
 .measure-stage .card-cover.has-cover-image {
-  background-position: center;
-  background-size: cover;
   color: #fff;
 }
 .card-page .card-cover.has-cover-image .card-cover-decoration,
@@ -511,4 +509,118 @@
 .card-page .card-content.cover-only .card-cover.cover-title-xlong .card-cover-title,
 .measure-stage .card-content.cover-only .card-cover.cover-title-xlong .card-cover-title {
   font-size: 66px;
+}
+
+.card-page .card-content.cover-only:has(.cover-standalone.has-cover-image) {
+  margin-inline: calc(-1 * var(--card-horizontal-padding));
+}
+
+/* The copy starts slightly before the artwork ends. The first track can
+ * shrink so long titles leave room for the signature on shorter cards. */
+.card-page .card-content.cover-only .card-cover.cover-standalone {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(22%, 52%) auto minmax(84px, 1fr);
+  align-content: normal;
+  height: 100%;
+  gap: 0;
+  padding-block: 0;
+}
+
+.card-page .card-content.cover-only .cover-standalone.has-cover-image {
+  padding-inline: max(9%, var(--card-horizontal-padding));
+  border: 0;
+  background: transparent;
+}
+
+.card-cover-art {
+  --cover-art-size: auto 115%;
+  --cover-edge-width: 32px;
+  position: absolute;
+  inset: 0;
+}
+
+.cover-standalone .card-cover-art {
+  --cover-art-size: cover;
+  inset-block: 12% auto;
+  inset-inline: 2%;
+  height: 50%;
+}
+
+.card-cover-art,
+.card-cover-art-detail {
+  mask-image:
+    linear-gradient(to right, transparent, black var(--cover-edge-width), black calc(100% - var(--cover-edge-width)), transparent),
+    linear-gradient(to bottom, transparent, black var(--cover-edge-width), black calc(100% - var(--cover-edge-width)), transparent);
+  mask-composite: intersect;
+}
+
+.card-cover-art-blur,
+.card-cover-art-detail {
+  position: absolute;
+  inset: 0;
+  background-image: var(--cover-image);
+  background-position: var(--cover-image-position);
+  background-size: var(--cover-art-size);
+}
+
+.card-cover-art-blur { filter: blur(12px); }
+
+.card-cover-art-detail { --cover-edge-width: 64px; }
+
+img.card-cover-art-detail {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: none;
+  object-fit: cover;
+  object-position: var(--cover-image-position);
+}
+
+.card-cover-art::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(to bottom, transparent 48%, color-mix(in srgb, var(--theme-surface) 86%, transparent) 73%, var(--theme-surface));
+}
+
+.cover-integrated .card-cover-art::after {
+  background: linear-gradient(to top, rgba(0, 0, 0, .84), rgba(0, 0, 0, .06) 76%);
+}
+
+.card-cover.has-cover-image .cover-author-signature {
+  position: relative;
+}
+
+.card-cover-copy {
+  position: relative;
+  display: grid;
+  grid-row: 2;
+  align-self: start;
+  gap: 12px;
+}
+
+.card-page .cover-standalone .cover-author-signature {
+  grid-row: 3;
+  justify-self: center;
+  max-width: 100%;
+  margin: 28px 0 0;
+  color: var(--theme-on-surface);
+  text-shadow: none;
+}
+
+.card-page .cover-standalone.has-cover-image .card-cover-copy .card-cover-title {
+  color: var(--longform-heading, var(--theme-on-surface));
+  text-shadow: none;
+}
+
+.card-page .cover-standalone.has-cover-image .card-cover-copy .card-cover-kicker {
+  color: var(--theme-primary);
+  text-shadow: none;
+}
+
+.card-page .cover-standalone.has-cover-image .card-cover-copy .card-cover-subtitle,
+.card-page .cover-standalone.has-cover-image .cover-author-signature {
+  color: var(--theme-on-surface);
+  text-shadow: none;
 }

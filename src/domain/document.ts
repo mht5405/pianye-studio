@@ -74,8 +74,6 @@ export interface LayoutConfig {
   codeFontSize: number;
   tableFontSize: number;
   mathScale: number;
-  headingH3TailPercent: number;
-  headingH4TailPercent: number;
   codeLineNumbers: boolean;
   codeBlockAppearance: CodeBlockAppearance;
   cardHorizontalPadding: number;
@@ -108,8 +106,6 @@ export const DEFAULT_CONFIG: LayoutConfig = {
   codeFontSize: 30,
   tableFontSize: 30,
   mathScale: 1,
-  headingH3TailPercent: 11,
-  headingH4TailPercent: 6,
   codeLineNumbers: false,
   codeBlockAppearance: 'macos',
   cardHorizontalPadding: 76,

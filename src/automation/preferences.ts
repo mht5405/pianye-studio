@@ -1,6 +1,8 @@
 import { CARD_THEME_IDS, DEFAULT_CONFIG, DENSITY_PRESETS, type LayoutConfig } from '../domain/document';
 import { downloadFile } from '../resources/download';
 
+const retiredHeadingOptions = new Set(['headingH3TailPercent', 'headingH4TailPercent']);
+
 function reusableLayout({
   coverImageDataUrl: _image,
   coverSource: _source,
@@ -8,6 +10,7 @@ function reusableLayout({
   coverSubtitle: _subtitle,
   ...layout
 }: LayoutConfig) {
+  for (const key of retiredHeadingOptions) Reflect.deleteProperty(layout, key);
   return layout;
 }
 
@@ -29,8 +32,6 @@ const ranges: Record<string, readonly [number, number]> = {
   codeFontSize: [20, 36],
   tableFontSize: [20, 36],
   mathScale: [0.72, 1],
-  headingH3TailPercent: [4, 22],
-  headingH4TailPercent: [0, 14],
   cardHorizontalPadding: [60, 92],
   cardVerticalPadding: [50, 88],
   imageMaxHeightPercent: [35, 68],
@@ -46,7 +47,9 @@ export function configFromPreferences(input: unknown): LayoutConfig {
     throw new Error('偏好文件需要 version: 1 和 layout 对象。');
   }
 
-  for (const [key, value] of Object.entries(input.layout)) {
+  // Version 1 preference files may still contain the former page-tail settings.
+  const entries = Object.entries(input.layout).filter(([key]) => !retiredHeadingOptions.has(key));
+  for (const [key, value] of entries) {
     if (!Object.hasOwn(defaults, key)) throw new Error(`未知的排版偏好 ${key}。`);
     const defaultValue = defaults[key as keyof typeof defaults];
     const allowed = choices[key];
@@ -63,7 +66,7 @@ export function configFromPreferences(input: unknown): LayoutConfig {
     }
   }
 
-  const layout = input.layout as Partial<typeof defaults>;
+  const layout = Object.fromEntries(entries) as Partial<typeof defaults>;
   const density = layout.density;
   return {
     ...DEFAULT_CONFIG,

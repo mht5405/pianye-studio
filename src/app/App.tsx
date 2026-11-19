@@ -390,7 +390,6 @@ export function App() {
             {activeSettingsCategory === "layout" && (
               <LayoutSettings
                 config={config}
-                onConfigChange={updateConfig}
                 onReadingConfigChange={updateReadingConfig}
                 onApplyDensity={applyDensityPreset}
               />

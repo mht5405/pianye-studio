@@ -140,19 +140,6 @@ function nextMeaningfulIndex(fragments: PageFragment[], start: number): number |
   return undefined;
 }
 
-function isShortLead(fragment: PageFragment, height: number, capacity: number): boolean {
-  // Two visual lines are a lead-in; a longer paragraph is already enough
-  // reading context to keep with its heading.
-  return (fragment.block.kind === 'paragraph' || fragment.block.kind === 'blockquote') && height <= capacity * 0.12;
-}
-
-function headingTailPercent(depth: number, config: LayoutConfig): number {
-  if (depth <= 1) return 100;
-  if (depth === 3) return config.headingH3TailPercent;
-  if (depth === 4) return config.headingH4TailPercent;
-  return 0;
-}
-
 function beforeSpacingFor(block: Block, config: LayoutConfig): number {
   if (block.id.startsWith('generated-source-')) return 6;
   if (block.kind === 'heading' && block.depth === 2) return config.headingH2BeforeSpacing;
@@ -160,61 +147,23 @@ function beforeSpacingFor(block: Block, config: LayoutConfig): number {
   return config.blockGap;
 }
 
-/**
- * The smallest context that should travel with a heading. H2 gets stronger
- * protection: a short lead paragraph is not enough context on its own. The
- * following substantive block, or a child heading and its first block, joins
- * the reservation as well.
- */
-function headingClusterHeight(
+function headingWithNextHeight(
   fragments: PageFragment[],
-  headingIndex: number,
+  index: number,
+  headingHeight: number,
   config: LayoutConfig,
   measurements: Record<string, number>,
   capacity: number,
   paragraphLeadHeight?: number,
 ): number {
-  const heading = fragments[headingIndex];
-  if (heading.block.kind !== 'heading') return 0;
-
-  const heightAt = (index: number) => fragmentHeight(fragments[index], config, measurements);
-  let reserved = heightAt(headingIndex);
-  const firstIndex = nextMeaningfulIndex(fragments, headingIndex + 1);
-  if (firstIndex === undefined) return reserved;
-
-  const include = (index: number) => {
-    const block = fragments[index].block;
-    const height = heightAt(index);
-    reserved += beforeSpacingFor(block, config) + (isFlowingParagraph(block) && paragraphLeadHeight !== undefined
-      ? Math.min(height, paragraphLeadHeight)
-      : height);
-  };
-  include(firstIndex);
-  const first = fragments[firstIndex];
-  const firstIsSubheading = first.block.kind === 'heading' && first.block.depth > heading.block.depth;
-
-  if (heading.block.depth <= 2 && firstIsSubheading) {
-    const childIndex = nextMeaningfulIndex(fragments, firstIndex + 1);
-    if (childIndex !== undefined) include(childIndex);
-  } else if (heading.block.depth <= 2 && isShortLead(first, heightAt(firstIndex), capacity)) {
-    const nextIndex = nextMeaningfulIndex(fragments, firstIndex + 1);
-    const next = nextIndex === undefined ? undefined : fragments[nextIndex];
-    if (nextIndex !== undefined && next?.block.kind === 'heading' && next.block.depth > heading.block.depth) {
-      include(nextIndex);
-      const childIndex = nextMeaningfulIndex(fragments, nextIndex + 1);
-      if (childIndex !== undefined) include(childIndex);
-    } else if (nextIndex !== undefined && next?.block.kind !== 'heading') {
-      include(nextIndex);
-    }
-  } else if (heading.block.depth === 3 && firstIsSubheading) {
-    const childIndex = nextMeaningfulIndex(fragments, firstIndex + 1);
-    if (childIndex !== undefined) include(childIndex);
+  const nextIndex = nextMeaningfulIndex(fragments, index + 1);
+  if (nextIndex === undefined) return headingHeight;
+  const next = fragments[nextIndex];
+  let nextHeight = fragmentHeight(next, config, measurements);
+  if (isFlowingParagraph(next.block) && paragraphLeadHeight !== undefined) {
+    nextHeight = Math.min(nextHeight, paragraphLeadHeight);
   }
-
-  // A single atomic table/code block can be taller than a heading cluster.
-  // Keep the page-break decision conservative without making an empty page
-  // impossible to fill; its own splitter handles the block afterwards.
-  return Math.min(reserved, capacity);
+  return Math.min(capacity, headingHeight + beforeSpacingFor(next.block, config) + nextHeight);
 }
 
 export function createPagePlan(
@@ -274,33 +223,14 @@ export function createPagePlan(
     const height = heightOf(fragment);
     const pageHasContent = current.length > 0 || Boolean(currentCover);
     let beforeSpacing = current.length ? beforeSpacingFor(block, config) : 0;
-    if (block.kind === 'heading') {
-      // An in-document H1 is a hard document/part boundary. The first H1 is
-      // already consumed as metadata by the parser.
-      if (block.depth <= 1 && pageHasContent) {
+    // H1 starts a new part. H2–H4 flow like ordinary blocks.
+    if (pageHasContent && block.kind === 'heading') {
+      const requiredHeight = block.depth >= 5
+        ? headingWithNextHeight(expanded, index, height, config, measurements, capacity, measureParagraph ? 2 * lineHeight : undefined)
+        : height;
+      if (block.depth <= 1 || used + beforeSpacing + requiredHeight > capacity) {
         flush();
         beforeSpacing = 0;
-      } else if (pageHasContent && block.depth === 2 && measureParagraph) {
-        const next = expanded[index + 1];
-        if (next && isFlowingParagraph(next.block)) {
-          const roomAfterHeading = capacity - used - beforeSpacing - height - beforeSpacingFor(next.block, config);
-          if (heightOf(next) > roomAfterHeading && !splitParagraph(next.block, roomAfterHeading, lineHeight, measureParagraph, false)) {
-            flush();
-            beforeSpacing = 0;
-          }
-        }
-      } else if (pageHasContent && block.depth > 2) {
-        const cluster = headingClusterHeight(expanded, index, config, measurements, capacity, measureParagraph ? 2 * lineHeight : undefined);
-        const tailGuard = capacity * (headingTailPercent(block.depth, config) / 100);
-        // The setting describes the zone where the heading itself must not
-        // begin. Reserve its rendered height in addition to the tail zone;
-        // comparing only the space before the heading lets its text drift
-        // into that zone.
-        const required = beforeSpacing + Math.max(cluster, height + tailGuard);
-        if (capacity - used < required) {
-          flush();
-          beforeSpacing = 0;
-        }
       }
     }
 

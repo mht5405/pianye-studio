@@ -120,10 +120,7 @@
 :is(.theme-elsewhere, .theme-warm-gray, .theme-classic-dark) .content-block strong { color: var(--longform-heading); }
 :is(.theme-elsewhere, .theme-warm-gray, .theme-classic-dark) .generated-source-entry { color: var(--theme-on-surface-variant); font-size: 22px; font-weight: 400; line-height: 1.4; }
 :is(.theme-elsewhere, .theme-warm-gray, .theme-classic-dark) .generated-source-entry strong { color: var(--theme-on-surface); font-weight: 500; }
-:is(.theme-elsewhere, .theme-warm-gray, .theme-classic-dark) .card-content.cover-only .card-cover {
-  justify-content: safe center;
-  padding: 72px 58px;
-}
+:is(.theme-elsewhere, .theme-warm-gray, .theme-classic-dark) .card-content.cover-only .card-cover { padding: 72px 58px; }
 :is(.theme-elsewhere, .theme-warm-gray, .theme-classic-dark) .card-content.cover-only .card-cover-title { font-size: 98px; }
 
 .theme-elsewhere .heading:is(.depth-2, .depth-3) { color: var(--longform-heading); }

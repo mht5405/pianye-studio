@@ -129,18 +129,18 @@ describe('技术 Markdown 解析', () => {
     expect(fragments.every((fragment) => fragment.block.kind === 'table' && fragment.block.rows[0][0][0].kind === 'text' && fragment.block.rows[0][0][0].value === '名称')).toBe(true);
   });
 
-  it('H2 正文可沿当前页顺延，H3 仍会携带首段避开页尾', () => {
-    const article = parseMarkdown('# 标题\n\n前置正文。\n\n## 二级标题\n\n短引言。\n\n### 三级标题\n\n三级标题的首段正文。');
-    const [before, h2, lead, h3, body] = article.blocks;
+  it('H2、H3 和 H4 直接衔接，正文按剩余容量分页', () => {
+    const article = parseMarkdown('# 标题\n\n前置正文。\n\n## 二级标题\n\n### 三级标题\n\n#### 四级标题\n\n四级标题的首段正文。');
+    const [before, h2, h3, h4, body] = article.blocks;
     const plan = createPagePlan(article, PAGE_TEST_CONFIG, {
-      [before.id]: 900,
+      [before.id]: 875,
       [h2.id]: 90,
-      [lead.id]: 90,
       [h3.id]: 70,
+      [h4.id]: 70,
       [body.id]: 200,
     });
-    expect(plan.pages[0].fragments.map((fragment) => fragment.sourceId)).toEqual([before.id, h2.id, lead.id]);
-    expect(plan.pages[1].fragments.map((fragment) => fragment.sourceId)).toEqual([h3.id, body.id]);
+    expect(plan.pages[0].fragments.map((fragment) => fragment.sourceId)).toEqual([before.id, h2.id, h3.id, h4.id]);
+    expect(plan.pages[1].fragments.map((fragment) => fragment.sourceId)).toEqual([body.id]);
   });
 
   it('H2 不触发强制标题簇换页，后续代码在空间不足时自然顺延', () => {
@@ -200,16 +200,16 @@ describe('技术 Markdown 解析', () => {
     expect(relaxed.pages).toHaveLength(2);
   });
 
-  it('根据 H3 的可调页尾安全区避免三级标题孤立在底部', () => {
-    const article = parseMarkdown('# 标题\n\n前置正文。\n\n### 三级标题\n\n三级标题的首段正文。');
-    const [before, h3, body] = article.blocks;
+  it.each([3, 4])('H%s 可以用完原先预留的页尾空间', (depth) => {
+    const article = parseMarkdown(`# 标题\n\n前置正文。\n\n${'#'.repeat(depth)} 小节标题\n\n首段正文。`);
+    const [before, heading, body] = article.blocks;
     const plan = createPagePlan(article, PAGE_TEST_CONFIG, {
-      [before.id]: 1_105,
-      [h3.id]: 70,
-      [body.id]: 90,
+      [before.id]: 1_065,
+      [heading.id]: 70,
+      [body.id]: 40,
     });
-    expect(plan.pages[0].fragments.map((fragment) => fragment.sourceId)).toEqual([before.id]);
-    expect(plan.pages[1].fragments.map((fragment) => fragment.sourceId)).toEqual([h3.id, body.id]);
+    expect(plan.pages).toHaveLength(1);
+    expect(plan.pages[0].fragments.map((fragment) => fragment.sourceId)).toEqual([before.id, heading.id, body.id]);
   });
 
   it('H2 不做强制聚簇，只有实际内容超出容量时才顺延到下一页', () => {
@@ -251,7 +251,7 @@ describe('技术 Markdown 解析', () => {
     expect(plan.pages.at(-1)?.fragments.map((fragment) => fragment.sourceId)).toEqual([last.id]);
   });
 
-  it('在页尾放不下两行正文时将二级标题和正文一起移到下一页', () => {
+  it('在页尾放不下两行正文时保留二级标题并将正文移到下一页', () => {
     const article = parseMarkdown(`# 标题\n\n前置正文。\n\n## 二级标题\n\n${'这一段应当跟在标题后方。'.repeat(12)}`);
     const [before, h2, body] = article.blocks;
     if (body.kind !== 'paragraph') throw new Error('测试前提：第三块应为段落');
@@ -260,7 +260,7 @@ describe('技术 Markdown 解析', () => {
       [h2.id]: 90,
       [body.id]: measureProse(body),
     }, undefined, measureProse);
-    expect(plan.pages.map((page) => page.fragments.map((fragment) => fragment.sourceId))).toEqual([[before.id], [h2.id, body.id]]);
+    expect(plan.pages.map((page) => page.fragments.map((fragment) => fragment.sourceId))).toEqual([[before.id, h2.id], [body.id]]);
   });
 
   it('融合首页的封面高度会占用首张卡片容量，且不会重复到后续页面', () => {
